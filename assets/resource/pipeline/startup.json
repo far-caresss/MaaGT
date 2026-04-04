@@ -1,0 +1,47 @@
+{
+    "StartUp": {
+        "post_wait_freezes": 300,
+        "timeout": 60000,
+        "next": [
+            //"HomeFlagFirst",
+            //"StartGame",
+            "[JumpBack]StartGT"
+        ]
+    },
+    "StartGT": {
+        "action": {
+            "type": "StartApp",
+            "param": {
+                "package": "com.bilibili.snake"
+            }
+        },
+        "on_error": [
+            "StartGTError"
+        ],
+        "next": [
+            "DisableStartGT"
+        ]
+    },
+    "Start1999Error": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "DisableNode",
+                "custom_action_param": {
+                    "node_name": "Start1999"
+                }
+            }
+        }
+    },
+    "DisableStart1999": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "DisableNode",
+                "custom_action_param": {
+                    "node_name": "Start1999"
+                }
+            }
+        }
+    }
+}

@@ -18,7 +18,8 @@
     // "mirrorchyan_multiplatform": true,
     "controller": [
         {
-            "name": "安卓端",
+            "name": "ADB",
+            "label": "模拟器",
             "type": "Adb",
             "display_short_side": 720 // 默认缩放分辨率的短边长度
         },
@@ -63,8 +64,11 @@
     ],
     "task": [
         {
-            "name": "普通任务",
-            "entry": "MyTask1"
+            "name": "启动游戏",
+            "entry": "StartUp",
+            "controller": [
+                "ADB"
+            ]
         },
         {
             "name": "选项任务",

@@ -22,7 +22,7 @@
             "DisableStartGT"
         ]
     },
-    "Start1999Error": {
+    "StartGTError": {
         "action": {
             "type": "Custom",
             "param": {
@@ -33,7 +33,7 @@
             }
         }
     },
-    "DisableStart1999": {
+    "DisableStartGT": {
         "action": {
             "type": "Custom",
             "param": {

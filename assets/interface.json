@@ -58,6 +58,9 @@
     //         "./agent/main.py"
     //     ]
     // },
+    "import": [
+        "D:/wh/jiaoben/MaaGT-win-x86_64/MaaGT/assets/tasts/StartUp.json"
+    ],
     "task": [
         {
             "name": "普通任务",

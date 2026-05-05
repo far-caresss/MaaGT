@@ -1,0 +1,268 @@
+{
+    "$__mpe_config_新建Pipeline3": {
+        "$__mpe_code": {
+            "prefix": "",
+            "lastSyncTime": 1777910685412,
+            "isModifiedExternally": false,
+            "filePath": "D:\\wh\\jiaoben\\MaaGT\\MaaGT\\assets\\resource\\pipeline\\shop.json",
+            "savedViewport": {
+                "x": -1071,
+                "y": 36,
+                "zoom": 0.99
+            },
+            "filename": "新建Pipeline3",
+            "version": "v1.5.1"
+        }
+    },
+    "过渡2": {
+        "$__mpe_code": {
+            "position": {
+                "x": 1935,
+                "y": 417
+            }
+        }
+    },
+    "$__mpe_external_Return_新建Pipeline3": {
+        "$__mpe_code": {
+            "position": {
+                "x": 332,
+                "y": 48
+            }
+        }
+    },
+    "$__mpe_external_点击空白处关闭弹窗_新建Pipeline3": {
+        "$__mpe_code": {
+            "position": {
+                "x": 1612,
+                "y": 457
+            }
+        }
+    },
+    "Shop": {
+        "post_wait_freezes": 300,
+        "timeout": 60000,
+        "next": [
+            "[JumpBack]Return",
+            "商店"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 12,
+                "y": 12
+            }
+        }
+    },
+    "商店": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    280,
+                    668,
+                    76,
+                    40
+                ],
+                "expected": [
+                    "商店"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    315,
+                    645,
+                    1,
+                    1
+                ]
+            }
+        },
+        "next": [
+            "资源"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 332,
+                "y": 188
+            }
+        }
+    },
+    "强化锤": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    269,
+                    186,
+                    955,
+                    339
+                ],
+                "expected": [
+                    "强化锤"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "确认.强化锤"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 1932,
+                "y": 202
+            }
+        }
+    },
+    "确认.免费": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    629,
+                    540,
+                    254,
+                    94
+                ],
+                "expected": [
+                    "免费"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "[JumpBack]点击空白处关闭弹窗",
+            "装备"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 1292,
+                "y": 271
+            }
+        }
+    },
+    "确认.强化锤": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    539,
+                    250,
+                    203,
+                    124
+                ],
+                "expected": [
+                    "强化锤"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    702,
+                    569,
+                    109,
+                    25
+                ]
+            }
+        },
+        "$__mpe_code": {
+            "position": {
+                "x": 2252,
+                "y": 188
+            }
+        }
+    },
+    "装备": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    10,
+                    126,
+                    251,
+                    584
+                ],
+                "expected": [
+                    "装备"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 3000,
+        "next": [
+            "强化锤",
+            "过渡2"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 1612,
+                "y": 202
+            }
+        }
+    },
+    "资源": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    6,
+                    113,
+                    247,
+                    606
+                ],
+                "expected": [
+                    "资源"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "金币",
+            "装备"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 652,
+                "y": 202
+            }
+        }
+    },
+    "金币": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    275,
+                    446,
+                    994,
+                    98
+                ],
+                "expected": [
+                    "免费"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "确认.免费"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 972,
+                "y": 271
+            }
+        }
+    }
+}

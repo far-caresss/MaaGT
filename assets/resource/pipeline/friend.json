@@ -1,0 +1,128 @@
+{
+    "$__mpe_config_新建Pipeline7": {
+        "$__mpe_code": {
+            "prefix": "",
+            "lastSyncTime": 1777881591469,
+            "isModifiedExternally": false,
+            "filePath": "D:\\wh\\jiaoben\\MaaGT\\MaaGT\\assets\\resource\\pipeline\\frieng.json",
+            "savedViewport": {
+                "x": 509,
+                "y": 318,
+                "zoom": 0.75
+            },
+            "filename": "新建Pipeline7",
+            "version": "v1.5.1"
+        }
+    },
+    "$__mpe_external_Return_新建Pipeline7": {
+        "$__mpe_code": {
+            "position": {
+                "x": 332,
+                "y": 12
+            }
+        }
+    },
+    "Friend": {
+        "post_wait_freezes": 300,
+        "timeout": 60000,
+        "next": [
+            "[JumpBack]Return",
+            "菜单"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 12,
+                "y": 123
+            }
+        }
+    },
+    "好友": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    305,
+                    477,
+                    116,
+                    132
+                ],
+                "expected": [
+                    "好友"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "送礼"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 652,
+                "y": 166
+            }
+        }
+    },
+    "菜单": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    25,
+                    592,
+                    82,
+                    125
+                ],
+                "expected": [
+                    "菜单"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    52,
+                    637,
+                    25,
+                    19
+                ]
+            }
+        },
+        "next": [
+            "好友"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 332,
+                "y": 152
+            }
+        }
+    },
+    "送礼": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    358,
+                    618,
+                    224,
+                    81
+                ],
+                "expected": [
+                    "一键"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "$__mpe_code": {
+            "position": {
+                "x": 972,
+                "y": 166
+            }
+        }
+    }
+}

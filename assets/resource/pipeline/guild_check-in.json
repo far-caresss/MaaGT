@@ -1,0 +1,100 @@
+{
+    "$__mpe_config_新建Pipeline6": {
+        "$__mpe_code": {
+            "prefix": "",
+            "lastSyncTime": 1777881612772,
+            "isModifiedExternally": false,
+            "filePath": "D:\\wh\\jiaoben\\MaaGT\\MaaGT\\assets\\resource\\pipeline\\guild_check-in.json",
+            "savedViewport": {
+                "x": 458,
+                "y": 227,
+                "zoom": 1.14
+            },
+            "filename": "新建Pipeline6",
+            "version": "v1.5.1"
+        }
+    },
+    "$__mpe_external_Return_新建Pipeline6": {
+        "$__mpe_code": {
+            "position": {
+                "x": 332,
+                "y": 48
+            }
+        }
+    },
+    "Guild_check-in": {
+        "post_wait_freezes": 300,
+        "timeout": 60000,
+        "next": [
+            "[JumpBack]Return",
+            "公会"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 12,
+                "y": 12
+            }
+        }
+    },
+    "公会": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    201,
+                    673,
+                    70,
+                    35
+                ],
+                "expected": [
+                    "公会"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    223,
+                    634,
+                    19,
+                    17
+                ]
+            }
+        },
+        "next": [
+            "公会签到"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 332,
+                "y": 188
+            }
+        }
+    },
+    "公会签到": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    26,
+                    586,
+                    233,
+                    111
+                ],
+                "expected": [
+                    "签到"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "$__mpe_code": {
+            "position": {
+                "x": 652,
+                "y": 202
+            }
+        }
+    }
+}

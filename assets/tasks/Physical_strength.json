@@ -1,0 +1,88 @@
+{
+    "task": [
+        {
+            "name": "觉醒石",
+            "entry": "Awakening"
+        },
+        {
+            "name": "忒提斯",
+            "entry": "Thetis"
+        },
+        {
+            "name": "进化石",
+            "entry": "进入裂痕",
+            "option": [
+                "进化石"
+            ]
+        },
+        {
+            "name": "开花石",
+            "entry": "进入裂痕",
+            "option": [
+                "开花石"
+            ]
+        }
+    ],
+    "option": {
+        "进化石": {
+            "type": "select",
+            "cases": [
+                {
+                    "name": "虚进化",
+                    "pipeline_override": {
+                        "裂痕": {
+                            "next": "进入进化石"
+                        },
+                        "进入进化石": {
+                            "next": "虚进化"
+                        }
+                    }
+                },
+                {
+                    "name": "土进化",
+                    "pipeline_override": {
+                        "裂痕": {
+                            "next": "进入进化石"
+                        },
+                        "进入进化石": {
+                            "next": "土进化"
+                        }
+                    }
+                },
+                {
+                    "name": "无"
+                }
+            ]
+        },
+        "开花石": {
+            "type": "select",
+            "cases": [
+                {
+                    "name": "虚开花",
+                    "pipeline_override": {
+                        "裂痕": {
+                            "next": "进入开花石"
+                        },
+                        "进入开花石": {
+                            "next": "虚开花"
+                        }
+                    }
+                },
+                {
+                    "name": "土开花",
+                    "pipeline_override": {
+                        "裂痕": {
+                            "next": "进入开花石"
+                        },
+                        "进入开花石": {
+                            "next": "土开花"
+                        }
+                    }
+                },
+                {
+                    "name": "无"
+                }
+            ]
+        }
+    }
+}

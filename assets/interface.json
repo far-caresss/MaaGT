@@ -60,16 +60,14 @@
     //     ]
     // },
     "import": [
-        "D:/wh/jiaoben/MaaGT-win-x86_64/MaaGT/assets/tasts/StartUp.json"
+        "tasks/StartUp.json",
+        "tasks/Shop.json",
+        "tasks/Receive.json",
+        "tasks/Physical_strength.json",
+        "tasks/Guild_check-in.json",
+        "tasks/Friend.json"
     ],
     "task": [
-        {
-            "name": "启动游戏",
-            "entry": "StartUp",
-            "controller": [
-                "ADB"
-            ]
-        },
         {
             "name": "选项任务",
             "entry": "MyTask2",

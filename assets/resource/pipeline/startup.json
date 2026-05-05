@@ -1,46 +1,571 @@
 {
-    "StartUp": {
-        "post_wait_freezes": 300,
+    "1": {
+        "$__mpe_code": {
+            "position": {
+                "x": 2252,
+                "y": 328
+            }
+        }
+    },
+    "$__mpe_config_新建Pipeline4": {
+        "$__mpe_code": {
+            "prefix": "",
+            "lastSyncTime": 1777948875460,
+            "isModifiedExternally": false,
+            "filePath": "D:\\wh\\jiaoben\\MaaGT\\MaaGT\\assets\\resource\\pipeline\\startup.json",
+            "savedViewport": {
+                "x": -206,
+                "y": 96,
+                "zoom": 0.57
+            },
+            "filename": "新建Pipeline4",
+            "version": "v1.5.1"
+        }
+    },
+    "Return": {
+        "max_hit": 1,
+        "post_wait_freezes": 500,
         "timeout": 60000,
         "next": [
-            //"HomeFlagFirst",
-            //"StartGame",
-            "[JumpBack]StartGT"
-        ]
+            "[JumpBack]确认",
+            "[JumpBack]点击空白处关闭弹窗",
+            "[JumpBack]返回",
+            "停止"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 1932,
+                "y": 1509
+            }
+        }
     },
     "StartGT": {
+        "max_hit": 1,
         "action": {
             "type": "StartApp",
             "param": {
                 "package": "com.bilibili.snake"
             }
         },
-        "on_error": [
-            "StartGTError"
-        ],
+        "post_delay": 25000,
         "next": [
-            "DisableStartGT"
-        ]
-    },
-    "StartGTError": {
-        "action": {
-            "type": "Custom",
-            "param": {
-                "custom_action": "DisableNode",
-                "custom_action_param": {
-                    "node_name": "Start1999"
-                }
+            "新建节点4"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 1292,
+                "y": 821
             }
         }
     },
-    "DisableStartGT": {
-        "action": {
-            "type": "Custom",
+    "StartUp": {
+        "post_wait_freezes": 300,
+        "timeout": 60000,
+        "next": [
+            "开始游戏",
+            "[JumpBack]热更新",
+            "[JumpBack]关闭公告",
+            "[JumpBack]签到",
+            "[JumpBack]弹窗",
+            "[JumpBack]点击空白处关闭弹窗",
+            "旅店",
+            "[JumpBack]StartGT"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 972,
+                "y": 469
+            }
+        }
+    },
+    "停止": {
+        "recognition": {
+            "type": "And",
             "param": {
-                "custom_action": "DisableNode",
-                "custom_action_param": {
-                    "node_name": "Start1999"
-                }
+                "all_of": [
+                    "识别颜色",
+                    "识别菜单"
+                ]
+            }
+        },
+        "$__mpe_code": {
+            "position": {
+                "x": 2252,
+                "y": 1575
+            }
+        }
+    },
+    "公主宝箱": {
+        "pre_delay": 1000,
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    676,
+                    285,
+                    1,
+                    1
+                ]
+            }
+        },
+        "$__mpe_code": {
+            "position": {
+                "x": 2252,
+                "y": 14
+            }
+        }
+    },
+    "关闭公告": {
+        "max_hit": 1,
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    1200,
+                    61,
+                    63,
+                    63
+                ],
+                "template": [
+                    "StarUp/公告关闭.png"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "$__mpe_code": {
+            "position": {
+                "x": 1932,
+                "y": 925
+            }
+        }
+    },
+    "开始游戏": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    7,
+                    521,
+                    167,
+                    198
+                ],
+                "template": [
+                    "StarUp/适龄提醒.png"
+                ]
+            }
+        },
+        "pre_delay": 3000,
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    650,
+                    497,
+                    0,
+                    0
+                ]
+            }
+        },
+        "post_delay": 7000,
+        "next": [
+            "热更新",
+            "[JumpBack]关闭公告",
+            "[JumpBack]弹窗",
+            "[JumpBack]签到",
+            "旅店"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 1292,
+                "y": 383
+            }
+        }
+    },
+    "弹窗": {
+        "recognition": {
+            "type": "ColorMatch",
+            "param": {
+                "roi": [
+                    1214,
+                    49,
+                    17,
+                    19
+                ],
+                "lower": [
+                    [
+                        255,
+                        255,
+                        255
+                    ]
+                ],
+                "upper": [
+                    255,
+                    255,
+                    255
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "timeout": 2000,
+        "next": [
+            "[JumpBack]月卡",
+            "[JumpBack]点击空白处关闭弹窗",
+            "1"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 1932,
+                "y": 582
+            }
+        }
+    },
+    "新建节点4": {
+        "$__mpe_code": {
+            "position": {
+                "x": 1612,
+                "y": 881
+            }
+        }
+    },
+    "旅店": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "识别颜色",
+                    "识别菜单"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    565,
+                    194,
+                    1,
+                    1
+                ]
+            }
+        },
+        "next": [
+            "公主宝箱"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 1932,
+                "y": 12
+            }
+        }
+    },
+    "点击空白处关闭弹窗": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "点击空白处关闭弹窗"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    1236,
+                    48,
+                    0,
+                    0
+                ]
+            }
+        },
+        "$__mpe_code": {
+            "position": {
+                "x": 2312,
+                "y": 1050
+            }
+        }
+    },
+    "热更新": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    304,
+                    459,
+                    768,
+                    211
+                ],
+                "expected": [
+                    "确认"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "[JumpBack]关闭公告",
+            "[JumpBack]签到",
+            "[JumpBack]弹窗",
+            "旅店"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 1612,
+                "y": 389
+            }
+        }
+    },
+    "确认": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "判断确认颜色",
+                    "判断确认"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "$__mpe_code": {
+            "position": {
+                "x": 2252,
+                "y": 1352
+            }
+        }
+    },
+    "签到": {
+        "recognition": {
+            "type": "ColorMatch",
+            "param": {
+                "roi": [
+                    155,
+                    59,
+                    909,
+                    514
+                ],
+                "lower": [
+                    [
+                        34,
+                        173,
+                        255
+                    ]
+                ],
+                "upper": [
+                    [
+                        34,
+                        173,
+                        255
+                    ]
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "[JumpBack]点击空白处关闭弹窗",
+            "1"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 1932,
+                "y": 295
+            }
+        }
+    },
+    "识别菜单": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    26,
+                    607,
+                    79,
+                    113
+                ],
+                "expected": [
+                    "菜单"
+                ]
+            }
+        },
+        "$__mpe_code": {
+            "position": {
+                "x": 12,
+                "y": 12
+            }
+        }
+    },
+    "识别颜色": {
+        "recognition": {
+            "type": "ColorMatch",
+            "param": {
+                "roi": [
+                    147,
+                    25,
+                    81,
+                    44
+                ],
+                "lower": [
+                    [
+                        35,
+                        47,
+                        55
+                    ]
+                ],
+                "upper": [
+                    [
+                        38,
+                        48,
+                        56
+                    ]
+                ]
+            }
+        },
+        "$__mpe_code": {
+            "position": {
+                "x": 492,
+                "y": 12
+            }
+        }
+    },
+    "返回": {
+        "recognition": {
+            "type": "ColorMatch",
+            "param": {
+                "roi": [
+                    20,
+                    7,
+                    53,
+                    58
+                ],
+                "lower": [
+                    [
+                        255,
+                        255,
+                        255
+                    ]
+                ],
+                "upper": [
+                    255,
+                    255,
+                    255
+                ],
+                "count": 5
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    37,
+                    25,
+                    17,
+                    24
+                ]
+            }
+        },
+        "$__mpe_code": {
+            "position": {
+                "x": 2252,
+                "y": 1796
+            }
+        }
+    },
+    "判断确认": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    318,
+                    372,
+                    663,
+                    314
+                ],
+                "expected": [
+                    "确认"
+                ]
+            }
+        },
+        "$__mpe_code": {
+            "position": {
+                "x": 252,
+                "y": 12
+            }
+        }
+    },
+    "判断确认颜色": {
+        "recognition": {
+            "type": "ColorMatch",
+            "param": {
+                "roi": [
+                    159,
+                    305,
+                    958,
+                    403
+                ],
+                "lower": [
+                    [
+                        255,
+                        207,
+                        17
+                    ]
+                ],
+                "upper": [
+                    [
+                        255,
+                        207,
+                        17
+                    ]
+                ]
+            }
+        },
+        "$__mpe_code": {
+            "position": {
+                "x": 732,
+                "y": 12
+            }
+        }
+    },
+    "月卡": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    499,
+                    253,
+                    293,
+                    252
+                ],
+                "template": [
+                    "StarUp/月卡钻石.png"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    1227,
+                    34,
+                    21,
+                    24
+                ]
+            }
+        },
+        "next": [
+            "点击空白处关闭弹窗"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 2269,
+                "y": 583
             }
         }
     }

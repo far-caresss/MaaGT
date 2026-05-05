@@ -1,0 +1,157 @@
+{
+    "$__mpe_config_新建Pipeline5": {
+        "$__mpe_code": {
+            "prefix": "",
+            "lastSyncTime": 1777909155065,
+            "isModifiedExternally": false,
+            "filePath": "D:\\wh\\jiaoben\\MaaGT\\MaaGT\\assets\\resource\\pipeline\\receive.json",
+            "savedViewport": {
+                "x": 806,
+                "y": 302,
+                "zoom": 0.65
+            },
+            "filename": "新建Pipeline5",
+            "version": "v1.5.1"
+        }
+    },
+    "Receive": {
+        "post_wait_freezes": 300,
+        "timeout": 60000,
+        "next": [
+            "[JumpBack]Return",
+            "任务"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 12,
+                "y": 134
+            }
+        }
+    },
+    "$__mpe_external_Return_新建Pipeline5": {
+        "$__mpe_code": {
+            "position": {
+                "x": 332,
+                "y": 12
+            }
+        }
+    },
+    "任务": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    355,
+                    605,
+                    135,
+                    98
+                ],
+                "template": [
+                    "StarUp/任务.png"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "日常"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 332,
+                "y": 152
+            }
+        }
+    },
+    "日常": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    99,
+                    85,
+                    381,
+                    46
+                ],
+                "expected": [
+                    "日常"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "全部领取"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 652,
+                "y": 177
+            }
+        }
+    },
+    "全部领取": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    1019,
+                    597,
+                    213,
+                    97
+                ],
+                "expected": [
+                    "全部领取"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "[JumpBack]点击空白处关闭弹窗",
+            "已获得"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 972,
+                "y": 177
+            }
+        }
+    },
+    "$__mpe_external_点击空白处关闭弹窗_新建Pipeline5": {
+        "$__mpe_code": {
+            "position": {
+                "x": 1292,
+                "y": 205
+            }
+        }
+    },
+    "已获得": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    42,
+                    562,
+                    284,
+                    116
+                ],
+                "expected": [
+                    "已获得"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "$__mpe_code": {
+            "position": {
+                "x": 1292,
+                "y": 345
+            }
+        }
+    }
+}

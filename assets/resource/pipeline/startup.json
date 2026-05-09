@@ -10,16 +10,16 @@
     "$__mpe_config_新建Pipeline4": {
         "$__mpe_code": {
             "prefix": "",
-            "lastSyncTime": 1777948875460,
+            "lastSyncTime": 1777949275754,
             "isModifiedExternally": false,
             "filePath": "D:\\wh\\jiaoben\\MaaGT\\MaaGT\\assets\\resource\\pipeline\\startup.json",
             "savedViewport": {
-                "x": -206,
-                "y": 96,
+                "x": -340,
+                "y": -439,
                 "zoom": 0.57
             },
             "filename": "新建Pipeline4",
-            "version": "v1.5.1"
+            "version": "v1.5.2"
         }
     },
     "Return": {
@@ -325,7 +325,6 @@
             "type": "And",
             "param": {
                 "all_of": [
-                    "判断确认颜色",
                     "判断确认"
                 ]
             }

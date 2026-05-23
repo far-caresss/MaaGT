@@ -10,13 +10,13 @@
     "$__mpe_config_新建Pipeline4": {
         "$__mpe_code": {
             "prefix": "",
-            "lastSyncTime": 1777949275754,
+            "lastSyncTime": 1779548560239,
             "isModifiedExternally": false,
             "filePath": "D:\\wh\\jiaoben\\MaaGT\\MaaGT\\assets\\resource\\pipeline\\startup.json",
             "savedViewport": {
-                "x": -340,
-                "y": -439,
-                "zoom": 0.57
+                "x": -282,
+                "y": -346,
+                "zoom": 0.87
             },
             "filename": "新建Pipeline4",
             "version": "v1.5.2"
@@ -47,7 +47,7 @@
                 "package": "com.bilibili.snake"
             }
         },
-        "post_delay": 25000,
+        "post_delay": 30000,
         "next": [
             "新建节点4"
         ],
@@ -59,7 +59,7 @@
         }
     },
     "StartUp": {
-        "post_wait_freezes": 300,
+        "post_delay": 500,
         "timeout": 60000,
         "next": [
             "开始游戏",

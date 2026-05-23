@@ -2,16 +2,16 @@
     "$__mpe_config_新建Pipeline7": {
         "$__mpe_code": {
             "prefix": "",
-            "lastSyncTime": 1777881591469,
+            "lastSyncTime": 1779548779794,
             "isModifiedExternally": false,
-            "filePath": "D:\\wh\\jiaoben\\MaaGT\\MaaGT\\assets\\resource\\pipeline\\frieng.json",
+            "filePath": "D:\\wh\\jiaoben\\MaaGT\\MaaGT\\assets\\resource\\pipeline\\friend.json",
             "savedViewport": {
-                "x": 509,
-                "y": 318,
-                "zoom": 0.75
+                "x": 260,
+                "y": 259,
+                "zoom": 1.15
             },
             "filename": "新建Pipeline7",
-            "version": "v1.5.1"
+            "version": "v1.5.2"
         }
     },
     "$__mpe_external_Return_新建Pipeline7": {
@@ -23,7 +23,7 @@
         }
     },
     "Friend": {
-        "post_wait_freezes": 300,
+        "post_delay": 500,
         "timeout": 60000,
         "next": [
             "[JumpBack]Return",

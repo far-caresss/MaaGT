@@ -2,20 +2,20 @@
     "$__mpe_config_新建Pipeline5": {
         "$__mpe_code": {
             "prefix": "",
-            "lastSyncTime": 1777909155065,
+            "lastSyncTime": 1777910750895,
             "isModifiedExternally": false,
             "filePath": "D:\\wh\\jiaoben\\MaaGT\\MaaGT\\assets\\resource\\pipeline\\receive.json",
             "savedViewport": {
-                "x": 806,
-                "y": 302,
-                "zoom": 0.65
+                "x": 316,
+                "y": 304,
+                "zoom": 0.86
             },
             "filename": "新建Pipeline5",
-            "version": "v1.5.1"
+            "version": "v1.5.2"
         }
     },
     "Receive": {
-        "post_wait_freezes": 300,
+        "post_delay": 500,
         "timeout": 60000,
         "next": [
             "[JumpBack]Return",

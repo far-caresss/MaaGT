@@ -2,31 +2,24 @@
     "$__mpe_config_新建Pipeline3": {
         "$__mpe_code": {
             "prefix": "",
-            "lastSyncTime": 1777910685412,
+            "lastSyncTime": 1779548582843,
             "isModifiedExternally": false,
             "filePath": "D:\\wh\\jiaoben\\MaaGT\\MaaGT\\assets\\resource\\pipeline\\shop.json",
+            "coordinateMode": "absolute-v1",
             "savedViewport": {
-                "x": -1071,
-                "y": 36,
+                "x": -303,
+                "y": 82,
                 "zoom": 0.99
             },
             "filename": "新建Pipeline3",
-            "version": "v1.5.1"
-        }
-    },
-    "过渡2": {
-        "$__mpe_code": {
-            "position": {
-                "x": 1935,
-                "y": 417
-            }
+            "version": "v1.5.3"
         }
     },
     "$__mpe_external_Return_新建Pipeline3": {
         "$__mpe_code": {
             "position": {
-                "x": 332,
-                "y": 48
+                "x": 419,
+                "y": 33
             }
         }
     },
@@ -39,7 +32,7 @@
         }
     },
     "Shop": {
-        "post_wait_freezes": 300,
+        "post_delay": 500,
         "timeout": 60000,
         "next": [
             "[JumpBack]Return",
@@ -227,7 +220,7 @@
             "type": "Click"
         },
         "next": [
-            "金币",
+            "买金币",
             "装备"
         ],
         "$__mpe_code": {
@@ -237,7 +230,7 @@
             }
         }
     },
-    "金币": {
+    "买金币": {
         "recognition": {
             "type": "OCR",
             "param": {
@@ -262,6 +255,14 @@
             "position": {
                 "x": 972,
                 "y": 271
+            }
+        }
+    },
+    "过渡2": {
+        "$__mpe_code": {
+            "position": {
+                "x": 1935,
+                "y": 417
             }
         }
     }

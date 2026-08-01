@@ -33,7 +33,7 @@ jobs:
       - name: Run maa-checker
         run: |
           npm ci
-          npx --yes @nekosu/maa-tools check --debug
+          npx --yes @nekosu/maa-tools --debug check
       - name: Install maafw
         run: |
           python -m pip install --upgrade pip

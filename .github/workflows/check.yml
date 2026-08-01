@@ -20,6 +20,8 @@ on:
 jobs:
   resource:
     runs-on: ubuntu-latest
+    env:
+      ACTIONS_STEP_DEBUG: true
     steps:
       - uses: actions/checkout@v4
         with:
@@ -28,12 +30,29 @@ jobs:
       - name: Use Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
 
-      - name: Run maa-checker
+      - name: Run maa-checker (verbose + capture)
         run: |
-          npm ci
-          npx @nekosu/maa-tools check
+          set -o pipefail
+          echo "=== debug: node/npm versions ==="
+          node -v || true
+          npm -v || true
+
+          echo "=== npm ci ==="
+          npm ci --no-audit --prefer-offline
+
+          echo "=== running maa-tools (verbose) ==="
+          # 加上 --yes 以避免 npx 交互提示；如果工具支持 --debug/--verbose，请使用
+          npx --yes @nekosu/maa-tools check --debug 2>&1 | tee maa-checker.log
+          tool_exit=${PIPESTATUS[0]}
+
+          if [ "$tool_exit" -ne 0 ]; then
+            echo "::error::maa-tools failed with exit code $tool_exit"
+            echo "=== last 200 lines of maa-checker.log ==="
+            tail -n 200 maa-checker.log || true
+            exit $tool_exit
+          fi
 
       - name: Install maafw
         run: |

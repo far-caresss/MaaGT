@@ -2,16 +2,49 @@
     "$__mpe_config_新建Pipeline5": {
         "$__mpe_code": {
             "prefix": "",
-            "lastSyncTime": 1777910750895,
+            "coordinateMode": "absolute-v1",
+            "lastSyncTime": 1785571833962,
             "isModifiedExternally": false,
             "filePath": "D:\\wh\\jiaoben\\MaaGT\\MaaGT\\assets\\resource\\pipeline\\receive.json",
             "savedViewport": {
-                "x": 316,
-                "y": 304,
-                "zoom": 0.86
+                "x": -945,
+                "y": -160,
+                "zoom": 0.99
             },
-            "filename": "新建Pipeline5",
-            "version": "v1.5.2"
+            "filename": "新建Pipeline2",
+            "version": "v1.6.1"
+        }
+    },
+    "$__mpe_external_Return_新建Pipeline5": {
+        "$__mpe_code": {
+            "position": {
+                "x": 332,
+                "y": 59
+            }
+        }
+    },
+    "$__mpe_external_点击空白处关闭弹窗_新建Pipeline5": {
+        "$__mpe_code": {
+            "position": {
+                "x": 1612,
+                "y": 233
+            }
+        }
+    },
+    "$__mpe_external_确认_新建Pipeline5": {
+        "$__mpe_code": {
+            "position": {
+                "x": 1932,
+                "y": 268
+            }
+        }
+    },
+    "$__mpe_external_返回_新建Pipeline5": {
+        "$__mpe_code": {
+            "position": {
+                "x": 1612,
+                "y": 93
+            }
         }
     },
     "Receive": {
@@ -24,15 +57,32 @@
         "$__mpe_code": {
             "position": {
                 "x": 12,
-                "y": 134
+                "y": 12
             }
         }
     },
-    "$__mpe_external_Return_新建Pipeline5": {
+    "一键领取": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    857,
+                    489,
+                    371,
+                    211
+                ],
+                "expected": [
+                    "键领取"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
         "$__mpe_code": {
             "position": {
-                "x": 332,
-                "y": 12
+                "x": 2572,
+                "y": 444
             }
         }
     },
@@ -60,35 +110,7 @@
         "$__mpe_code": {
             "position": {
                 "x": 332,
-                "y": 152
-            }
-        }
-    },
-    "日常": {
-        "recognition": {
-            "type": "OCR",
-            "param": {
-                "roi": [
-                    99,
-                    85,
-                    381,
-                    46
-                ],
-                "expected": [
-                    "日常"
-                ]
-            }
-        },
-        "action": {
-            "type": "Click"
-        },
-        "next": [
-            "全部领取"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 652,
-                "y": 177
+                "y": 199
             }
         }
     },
@@ -117,15 +139,7 @@
         "$__mpe_code": {
             "position": {
                 "x": 972,
-                "y": 177
-            }
-        }
-    },
-    "$__mpe_external_点击空白处关闭弹窗_新建Pipeline5": {
-        "$__mpe_code": {
-            "position": {
-                "x": 1292,
-                "y": 205
+                "y": 224
             }
         }
     },
@@ -147,10 +161,140 @@
         "action": {
             "type": "Click"
         },
+        "next": [
+            "[JumpBack]点击空白处关闭弹窗",
+            "[JumpBack]返回",
+            "活动"
+        ],
         "$__mpe_code": {
             "position": {
                 "x": 1292,
-                "y": 345
+                "y": 124
+            }
+        }
+    },
+    "收起": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    17,
+                    13,
+                    295,
+                    49
+                ],
+                "expected": [
+                    "活动"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    340,
+                    359,
+                    17,
+                    13
+                ]
+            }
+        },
+        "next": [
+            "确认活动目标"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 1932,
+                "y": 408
+            }
+        }
+    },
+    "日常": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    99,
+                    85,
+                    381,
+                    46
+                ],
+                "expected": [
+                    "日常"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "全部领取",
+            "[JumpBack]返回",
+            "活动"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 652,
+                "y": 224
+            }
+        }
+    },
+    "活动": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    1155,
+                    109,
+                    124,
+                    171
+                ],
+                "expected": [
+                    "活动"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    1201,
+                    148,
+                    30,
+                    36
+                ]
+            }
+        },
+        "next": [
+            "[JumpBack]确认",
+            "收起"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 1612,
+                "y": 373
+            }
+        }
+    },
+    "确认活动目标": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "确认活动目标"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "一键领取"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 2252,
+                "y": 443
             }
         }
     }

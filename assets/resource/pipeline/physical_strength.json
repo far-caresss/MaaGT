@@ -2,32 +2,32 @@
     "$__mpe_config_新建Pipeline2": {
         "$__mpe_code": {
             "prefix": "",
-            "lastSyncTime": 1779550580694,
+            "lastSyncTime": 1785581660560,
             "isModifiedExternally": false,
             "filePath": "D:\\wh\\jiaoben\\MaaGT\\MaaGT\\assets\\resource\\pipeline\\physical_strength.json",
             "coordinateMode": "absolute-v1",
             "savedViewport": {
-                "x": 78,
-                "y": -541,
-                "zoom": 0.65
+                "x": -305,
+                "y": -618,
+                "zoom": 0.74
             },
             "filename": "新建Pipeline2",
-            "version": "v1.5.3"
+            "version": "v1.6.1"
         }
     },
     "$__mpe_external_Return_新建Pipeline2": {
         "$__mpe_code": {
             "position": {
                 "x": 1052,
-                "y": 3083
+                "y": 4613
             }
         }
     },
     "$__mpe_external_确认_新建Pipeline2": {
         "$__mpe_code": {
             "position": {
-                "x": 1372,
-                "y": 2915
+                "x": 2022,
+                "y": 5076
             }
         }
     },
@@ -37,12 +37,12 @@
         "next": [
             "[JumpBack]Return",
             "[JumpBack]游玩",
-            "觉醒"
+            "裂痕觉醒"
         ],
         "$__mpe_code": {
             "position": {
                 "x": 732,
-                "y": 2755
+                "y": 5184
             }
         }
     },
@@ -57,7 +57,55 @@
         "$__mpe_code": {
             "position": {
                 "x": 732,
-                "y": 3032
+                "y": 4872
+            }
+        }
+    },
+    "体力达标判断失败": {
+        "$__mpe_code": {
+            "position": {
+                "x": 2022,
+                "y": 1309
+            }
+        }
+    },
+    "体力达标判断对": {
+        "recognition": {
+            "type": "Custom",
+            "param": {
+                "custom_recognition": "ExpressionRecognition",
+                "custom_recognition_param": {
+                    "expression": "{判断体力} >= 50"
+                }
+            }
+        },
+        "next": [
+            "扫荡"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 1840,
+                "y": 1509
+            }
+        }
+    },
+    "体力达标判断错": {
+        "recognition": {
+            "type": "Custom",
+            "param": {
+                "custom_recognition": "ExpressionRecognition",
+                "custom_recognition_param": {
+                    "expression": "{判断体力} < 50"
+                }
+            }
+        },
+        "next": [
+            "体力达标判断失败"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 1757,
+                "y": 1168
             }
         }
     },
@@ -76,6 +124,7 @@
                 ]
             }
         },
+        "pre_delay": 500,
         "action": {
             "type": "Click",
             "param": {
@@ -94,8 +143,8 @@
         ],
         "$__mpe_code": {
             "position": {
-                "x": 1052,
-                "y": 1017
+                "x": 732,
+                "y": 1652
             }
         }
     },
@@ -114,6 +163,7 @@
                 ]
             }
         },
+        "pre_delay": 500,
         "action": {
             "type": "Click",
             "param": {
@@ -128,12 +178,37 @@
         "post_delay": 500,
         "timeout": 60000,
         "next": [
-            "扫荡"
+            "焕发未完成",
+            "焕发已完成"
         ],
         "$__mpe_code": {
             "position": {
                 "x": 1372,
-                "y": 1319
+                "y": 3667
+            }
+        }
+    },
+    "判断体力": {
+        "max_hit": 1,
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    635,
+                    545,
+                    52,
+                    40
+                ],
+                "expected": [
+                    "^\\d*$"
+                ],
+                "only_rec": true
+            }
+        },
+        "$__mpe_code": {
+            "position": {
+                "x": 1364,
+                "y": 1033
             }
         }
     },
@@ -152,6 +227,7 @@
                 ]
             }
         },
+        "pre_delay": 500,
         "action": {
             "type": "Click",
             "param": {
@@ -170,8 +246,8 @@
         ],
         "$__mpe_code": {
             "position": {
-                "x": 1052,
-                "y": 2425
+                "x": 732,
+                "y": 422
             }
         }
     },
@@ -190,6 +266,7 @@
                 ]
             }
         },
+        "pre_delay": 500,
         "action": {
             "type": "Click",
             "param": {
@@ -204,12 +281,13 @@
         "post_delay": 500,
         "timeout": 60000,
         "next": [
-            "扫荡"
+            "焕发未完成",
+            "焕发已完成"
         ],
         "$__mpe_code": {
             "position": {
                 "x": 1372,
-                "y": 2083
+                "y": 4077
             }
         }
     },
@@ -234,12 +312,14 @@
         "repeat": 14,
         "repeat_delay": 500,
         "next": [
-            "扫荡"
+            "[JumpBack]判断体力",
+            "体力达标判断错",
+            "体力达标判断对"
         ],
         "$__mpe_code": {
             "position": {
-                "x": 1372,
-                "y": 1694
+                "x": 1052,
+                "y": 1235
             }
         }
     },
@@ -269,8 +349,8 @@
         ],
         "$__mpe_code": {
             "position": {
-                "x": 1052,
-                "y": 3223
+                "x": 1372,
+                "y": 4897
             }
         }
     },
@@ -305,8 +385,8 @@
         ],
         "$__mpe_code": {
             "position": {
-                "x": 1372,
-                "y": 3296
+                "x": 1702,
+                "y": 4848
             }
         }
     },
@@ -330,8 +410,8 @@
         },
         "$__mpe_code": {
             "position": {
-                "x": 1692,
-                "y": 1761
+                "x": 2022,
+                "y": 3395
             }
         }
     },
@@ -350,6 +430,7 @@
                 ]
             }
         },
+        "pre_delay": 500,
         "action": {
             "type": "Click",
             "param": {
@@ -368,8 +449,8 @@
         ],
         "$__mpe_code": {
             "position": {
-                "x": 1052,
-                "y": 642
+                "x": 732,
+                "y": 832
             }
         }
     },
@@ -388,6 +469,7 @@
                 ]
             }
         },
+        "pre_delay": 500,
         "action": {
             "type": "Click",
             "param": {
@@ -402,12 +484,13 @@
         "post_delay": 500,
         "timeout": 60000,
         "next": [
-            "扫荡"
+            "焕发未完成",
+            "焕发已完成"
         ],
         "$__mpe_code": {
             "position": {
                 "x": 1372,
-                "y": 194
+                "y": 2437
             }
         }
     },
@@ -426,6 +509,7 @@
                 ]
             }
         },
+        "pre_delay": 500,
         "action": {
             "type": "Click",
             "param": {
@@ -444,7 +528,7 @@
         ],
         "$__mpe_code": {
             "position": {
-                "x": 1052,
+                "x": 732,
                 "y": 12
             }
         }
@@ -464,6 +548,7 @@
                 ]
             }
         },
+        "pre_delay": 500,
         "action": {
             "type": "Click",
             "param": {
@@ -478,12 +563,13 @@
         "post_delay": 500,
         "timeout": 60000,
         "next": [
-            "扫荡"
+            "焕发未完成",
+            "焕发已完成"
         ],
         "$__mpe_code": {
             "position": {
                 "x": 1372,
-                "y": 569
+                "y": 1617
             }
         }
     },
@@ -516,7 +602,7 @@
         "$__mpe_code": {
             "position": {
                 "x": 1052,
-                "y": 2142
+                "y": 4753
             }
         }
     },
@@ -535,6 +621,7 @@
                 ]
             }
         },
+        "pre_delay": 500,
         "action": {
             "type": "Click",
             "param": {
@@ -553,8 +640,8 @@
         ],
         "$__mpe_code": {
             "position": {
-                "x": 1052,
-                "y": 1392
+                "x": 732,
+                "y": 2472
             }
         }
     },
@@ -573,6 +660,7 @@
                 ]
             }
         },
+        "pre_delay": 500,
         "action": {
             "type": "Click",
             "param": {
@@ -587,16 +675,64 @@
         "post_delay": 500,
         "timeout": 60000,
         "next": [
-            "扫荡"
+            "焕发未完成",
+            "焕发已完成"
         ],
         "$__mpe_code": {
             "position": {
                 "x": 1372,
-                "y": 2399
+                "y": 2027
             }
         }
     },
-    "虚开花": {
+    "焕发已完成": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    340,
+                    542,
+                    46,
+                    32
+                ],
+                "expected": [
+                    "消耗"
+                ]
+            }
+        },
+        "$__mpe_code": {
+            "position": {
+                "x": 1702,
+                "y": 3108
+            }
+        }
+    },
+    "焕发未完成": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    283,
+                    488,
+                    776,
+                    128
+                ],
+                "expected": [
+                    "10/10"
+                ]
+            }
+        },
+        "next": [
+            "扫荡"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 1702,
+                "y": 3361
+            }
+        }
+    },
+    "红碎": {
         "recognition": {
             "type": "OCR",
             "param": {
@@ -607,10 +743,11 @@
                     412
                 ],
                 "expected": [
-                    "虚属性"
+                    "红色碎片"
                 ]
             }
         },
+        "pre_delay": 500,
         "action": {
             "type": "Click",
             "param": {
@@ -629,8 +766,47 @@
         ],
         "$__mpe_code": {
             "position": {
-                "x": 1052,
-                "y": 1767
+                "x": 732,
+                "y": 2062
+            }
+        }
+    },
+    "虚开花": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    34,
+                    209,
+                    1232,
+                    412
+                ],
+                "expected": [
+                    "虚属性"
+                ]
+            }
+        },
+        "pre_delay": 500,
+        "action": {
+            "type": "Click",
+            "param": {
+                "target_offset": [
+                    208,
+                    114,
+                    71,
+                    -16
+                ]
+            }
+        },
+        "post_delay": 500,
+        "timeout": 60000,
+        "next": [
+            "开花次数"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 732,
+                "y": 1242
             }
         }
     },
@@ -649,6 +825,7 @@
                 ]
             }
         },
+        "pre_delay": 500,
         "action": {
             "type": "Click",
             "param": {
@@ -663,12 +840,13 @@
         "post_delay": 500,
         "timeout": 60000,
         "next": [
-            "扫荡"
+            "焕发未完成",
+            "焕发已完成"
         ],
         "$__mpe_code": {
             "position": {
                 "x": 1372,
-                "y": 944
+                "y": 2847
             }
         }
     },
@@ -693,7 +871,35 @@
         "$__mpe_code": {
             "position": {
                 "x": 1052,
-                "y": 387
+                "y": 4218
+            }
+        }
+    },
+    "裂痕觉醒": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    106,
+                    85,
+                    1148,
+                    70
+                ],
+                "expected": [
+                    "裂痕"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "资源觉醒"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 1052,
+                "y": 5253
             }
         }
     },
@@ -712,6 +918,7 @@
                 ]
             }
         },
+        "pre_delay": 500,
         "action": {
             "type": "Click",
             "param": {
@@ -729,8 +936,59 @@
         ],
         "$__mpe_code": {
             "position": {
-                "x": 1052,
-                "y": 2800
+                "x": 1702,
+                "y": 5360
+            }
+        }
+    },
+    "觉醒已完成": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    278,
+                    627,
+                    122,
+                    24
+                ],
+                "expected": [
+                    "挑战券兑换"
+                ]
+            }
+        },
+        "$__mpe_code": {
+            "position": {
+                "x": 1702,
+                "y": 5107
+            }
+        }
+    },
+    "资源觉醒": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    927,
+                    147,
+                    208,
+                    51
+                ],
+                "expected": [
+                    "资源"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "觉醒已完成",
+            "觉醒"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 1372,
+                "y": 5275
             }
         }
     },
@@ -771,7 +1029,7 @@
         "$__mpe_code": {
             "position": {
                 "x": 732,
-                "y": 2361
+                "y": 4560
             }
         }
     },
@@ -786,7 +1044,7 @@
         "$__mpe_code": {
             "position": {
                 "x": 732,
-                "y": 2084
+                "y": 4248
             }
         }
     },
@@ -844,82 +1102,6 @@
             }
         }
     },
-    "金币": {
-        "recognition": {
-            "type": "OCR",
-            "param": {
-                "roi": [
-                    34,
-                    209,
-                    1232,
-                    412
-                ],
-                "expected": [
-                    "金币"
-                ]
-            }
-        },
-        "action": {
-            "type": "Click",
-            "param": {
-                "target_offset": [
-                    208,
-                    114,
-                    71,
-                    -16
-                ]
-            }
-        },
-        "post_delay": 500,
-        "timeout": 60000,
-        "next": [
-            "扫荡"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1701,
-                "y": 1329
-            }
-        }
-    },
-    "红碎": {
-        "recognition": {
-            "type": "OCR",
-            "param": {
-                "roi": [
-                    34,
-                    209,
-                    1232,
-                    412
-                ],
-                "expected": [
-                    "红色碎片"
-                ]
-            }
-        },
-        "action": {
-            "type": "Click",
-            "param": {
-                "target_offset": [
-                    208,
-                    114,
-                    71,
-                    -16
-                ]
-            }
-        },
-        "post_delay": 500,
-        "timeout": 60000,
-        "next": [
-            "扫荡"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 625,
-                "y": 1535
-            }
-        }
-    },
     "道具": {
         "recognition": {
             "type": "OCR",
@@ -935,6 +1117,7 @@
                 ]
             }
         },
+        "pre_delay": 500,
         "action": {
             "type": "Click",
             "param": {
@@ -949,12 +1132,53 @@
         "post_delay": 500,
         "timeout": 60000,
         "next": [
-            "扫荡"
+            "焕发未完成",
+            "焕发已完成"
         ],
         "$__mpe_code": {
             "position": {
-                "x": 1691,
-                "y": 936
+                "x": 1372,
+                "y": 3257
+            }
+        }
+    },
+    "金币": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    34,
+                    209,
+                    1232,
+                    412
+                ],
+                "expected": [
+                    "金币"
+                ]
+            }
+        },
+        "pre_delay": 500,
+        "action": {
+            "type": "Click",
+            "param": {
+                "target_offset": [
+                    208,
+                    114,
+                    71,
+                    -16
+                ]
+            }
+        },
+        "post_delay": 500,
+        "timeout": 60000,
+        "next": [
+            "焕发未完成",
+            "焕发已完成"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 1372,
+                "y": 4487
             }
         }
     }

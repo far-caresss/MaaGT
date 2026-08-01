@@ -2,24 +2,25 @@
     "1": {
         "$__mpe_code": {
             "position": {
-                "x": 2252,
-                "y": 328
+                "x": 2572,
+                "y": 518
             }
         }
     },
     "$__mpe_config_新建Pipeline4": {
         "$__mpe_code": {
             "prefix": "",
-            "lastSyncTime": 1779548560239,
+            "lastSyncTime": 1785571833932,
             "isModifiedExternally": false,
             "filePath": "D:\\wh\\jiaoben\\MaaGT\\MaaGT\\assets\\resource\\pipeline\\startup.json",
+            "coordinateMode": "absolute-v1",
             "savedViewport": {
-                "x": -282,
-                "y": -346,
-                "zoom": 0.87
+                "x": -756,
+                "y": -337,
+                "zoom": 1
             },
-            "filename": "新建Pipeline4",
-            "version": "v1.5.2"
+            "filename": "新建Pipeline2",
+            "version": "v1.6.1"
         }
     },
     "Return": {
@@ -27,15 +28,17 @@
         "post_wait_freezes": 500,
         "timeout": 60000,
         "next": [
+            "[JumpBack]取消",
             "[JumpBack]确认",
             "[JumpBack]点击空白处关闭弹窗",
             "[JumpBack]返回",
+            "[JumpBack]人物窗返回",
             "停止"
         ],
         "$__mpe_code": {
             "position": {
-                "x": 1932,
-                "y": 1509
+                "x": 2572,
+                "y": 1297
             }
         }
     },
@@ -49,12 +52,14 @@
         },
         "post_delay": 30000,
         "next": [
-            "新建节点4"
+            "[JumpBack]热更新",
+            "[JumpBack]开始游戏",
+            "旅店"
         ],
         "$__mpe_code": {
             "position": {
                 "x": 1292,
-                "y": 821
+                "y": 630
             }
         }
     },
@@ -62,19 +67,12 @@
         "post_delay": 500,
         "timeout": 60000,
         "next": [
-            "开始游戏",
-            "[JumpBack]热更新",
-            "[JumpBack]关闭公告",
-            "[JumpBack]签到",
-            "[JumpBack]弹窗",
-            "[JumpBack]点击空白处关闭弹窗",
-            "旅店",
             "[JumpBack]StartGT"
         ],
         "$__mpe_code": {
             "position": {
                 "x": 972,
-                "y": 469
+                "y": 646
             }
         }
     },
@@ -90,13 +88,13 @@
         },
         "$__mpe_code": {
             "position": {
-                "x": 2252,
-                "y": 1575
+                "x": 2892,
+                "y": 862
             }
         }
     },
     "公主宝箱": {
-        "pre_delay": 1000,
+        "pre_delay": 2000,
         "action": {
             "type": "Click",
             "param": {
@@ -110,24 +108,111 @@
         },
         "$__mpe_code": {
             "position": {
-                "x": 2252,
-                "y": 14
+                "x": 2572,
+                "y": 1018
             }
         }
     },
     "关闭公告": {
-        "max_hit": 1,
         "recognition": {
-            "type": "TemplateMatch",
+            "type": "OCR",
             "param": {
                 "roi": [
-                    1200,
-                    61,
-                    63,
-                    63
+                    18,
+                    28,
+                    1261,
+                    157
                 ],
-                "template": [
-                    "StarUp/公告关闭.png"
+                "expected": [
+                    "公告"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    1228,
+                    77,
+                    16,
+                    14
+                ]
+            }
+        },
+        "$__mpe_code": {
+            "position": {
+                "x": 2252,
+                "y": 334
+            }
+        }
+    },
+    "判断确认": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    6,
+                    7,
+                    1254,
+                    712
+                ],
+                "expected": [
+                    "确认"
+                ]
+            }
+        },
+        "$__mpe_code": {
+            "position": {
+                "x": 12,
+                "y": 12
+            }
+        }
+    },
+    "判断确认颜色": {
+        "recognition": {
+            "type": "ColorMatch",
+            "param": {
+                "roi": [
+                    159,
+                    305,
+                    958,
+                    403
+                ],
+                "lower": [
+                    [
+                        255,
+                        207,
+                        17
+                    ]
+                ],
+                "upper": [
+                    [
+                        255,
+                        207,
+                        17
+                    ]
+                ]
+            }
+        },
+        "$__mpe_code": {
+            "position": {
+                "x": 492,
+                "y": 12
+            }
+        }
+    },
+    "取消": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    6,
+                    9,
+                    1264,
+                    682
+                ],
+                "expected": [
+                    "取消"
                 ]
             }
         },
@@ -136,8 +221,8 @@
         },
         "$__mpe_code": {
             "position": {
-                "x": 1932,
-                "y": 925
+                "x": 2892,
+                "y": 1083
             }
         }
     },
@@ -168,7 +253,7 @@
                 ]
             }
         },
-        "post_delay": 7000,
+        "post_delay": 10000,
         "next": [
             "热更新",
             "[JumpBack]关闭公告",
@@ -178,8 +263,8 @@
         ],
         "$__mpe_code": {
             "position": {
-                "x": 1292,
-                "y": 383
+                "x": 1612,
+                "y": 561
             }
         }
     },
@@ -218,16 +303,8 @@
         ],
         "$__mpe_code": {
             "position": {
-                "x": 1932,
-                "y": 582
-            }
-        }
-    },
-    "新建节点4": {
-        "$__mpe_code": {
-            "position": {
-                "x": 1612,
-                "y": 881
+                "x": 2252,
+                "y": 617
             }
         }
     },
@@ -257,8 +334,44 @@
         ],
         "$__mpe_code": {
             "position": {
-                "x": 1932,
-                "y": 12
+                "x": 2252,
+                "y": 1015
+            }
+        }
+    },
+    "月卡": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    499,
+                    253,
+                    293,
+                    252
+                ],
+                "template": [
+                    "StarUp/月卡钻石.png"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    1227,
+                    34,
+                    21,
+                    24
+                ]
+            }
+        },
+        "next": [
+            "点击空白处关闭弹窗"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 2572,
+                "y": 648
             }
         }
     },
@@ -284,8 +397,8 @@
         },
         "$__mpe_code": {
             "position": {
-                "x": 2312,
-                "y": 1050
+                "x": 2892,
+                "y": 569
             }
         }
     },
@@ -307,6 +420,7 @@
         "action": {
             "type": "Click"
         },
+        "post_delay": 10000,
         "next": [
             "[JumpBack]关闭公告",
             "[JumpBack]签到",
@@ -315,8 +429,8 @@
         ],
         "$__mpe_code": {
             "position": {
-                "x": 1612,
-                "y": 389
+                "x": 1932,
+                "y": 455
             }
         }
     },
@@ -334,8 +448,8 @@
         },
         "$__mpe_code": {
             "position": {
-                "x": 2252,
-                "y": 1352
+                "x": 2892,
+                "y": 1685
             }
         }
     },
@@ -374,8 +488,8 @@
         ],
         "$__mpe_code": {
             "position": {
-                "x": 1932,
-                "y": 295
+                "x": 2252,
+                "y": 12
             }
         }
     },
@@ -396,7 +510,7 @@
         },
         "$__mpe_code": {
             "position": {
-                "x": 12,
+                "x": 252,
                 "y": 12
             }
         }
@@ -429,7 +543,7 @@
         },
         "$__mpe_code": {
             "position": {
-                "x": 492,
+                "x": 732,
                 "y": 12
             }
         }
@@ -472,78 +586,23 @@
         },
         "$__mpe_code": {
             "position": {
-                "x": 2252,
-                "y": 1796
+                "x": 2892,
+                "y": 1338
             }
         }
     },
-    "判断确认": {
+    "人物窗返回": {
         "recognition": {
             "type": "OCR",
             "param": {
                 "roi": [
-                    318,
-                    372,
-                    663,
-                    314
+                    830,
+                    47,
+                    119,
+                    36
                 ],
                 "expected": [
-                    "确认"
-                ]
-            }
-        },
-        "$__mpe_code": {
-            "position": {
-                "x": 252,
-                "y": 12
-            }
-        }
-    },
-    "判断确认颜色": {
-        "recognition": {
-            "type": "ColorMatch",
-            "param": {
-                "roi": [
-                    159,
-                    305,
-                    958,
-                    403
-                ],
-                "lower": [
-                    [
-                        255,
-                        207,
-                        17
-                    ]
-                ],
-                "upper": [
-                    [
-                        255,
-                        207,
-                        17
-                    ]
-                ]
-            }
-        },
-        "$__mpe_code": {
-            "position": {
-                "x": 732,
-                "y": 12
-            }
-        }
-    },
-    "月卡": {
-        "recognition": {
-            "type": "TemplateMatch",
-            "param": {
-                "roi": [
-                    499,
-                    253,
-                    293,
-                    252
-                ],
-                "template": [
-                    "StarUp/月卡钻石.png"
+                    "守护者信息"
                 ]
             }
         },
@@ -551,20 +610,17 @@
             "type": "Click",
             "param": {
                 "target": [
-                    1227,
-                    34,
-                    21,
-                    24
+                    77,
+                    321,
+                    33,
+                    65
                 ]
             }
         },
-        "next": [
-            "点击空白处关闭弹窗"
-        ],
         "$__mpe_code": {
             "position": {
-                "x": 2269,
-                "y": 583
+                "x": 2892,
+                "y": 1908
             }
         }
     }

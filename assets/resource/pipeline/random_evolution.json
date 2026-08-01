@@ -1,0 +1,232 @@
+{
+    "$__mpe_config_新建Pipeline8": {
+        "$__mpe_code": {
+            "prefix": "",
+            "coordinateMode": "absolute-v1",
+            "lastSyncTime": 1785571833960,
+            "isModifiedExternally": false,
+            "filePath": "D:\\wh\\jiaoben\\MaaGT\\MaaGT\\assets\\resource\\pipeline\\random_evolution.json",
+            "savedViewport": {
+                "x": 149,
+                "y": 305,
+                "zoom": 0.75
+            },
+            "filename": "新建Pipeline2",
+            "version": "v1.6.1"
+        }
+    },
+    "$__mpe_external_Return_新建Pipeline8": {
+        "$__mpe_code": {
+            "position": {
+                "x": 332,
+                "y": 12
+            }
+        }
+    },
+    "RandomEvolution": {
+        "post_delay": 500,
+        "timeout": 60000,
+        "next": [
+            "[JumpBack]Return",
+            "菜单2"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 12,
+                "y": 123
+            }
+        }
+    },
+    "强化": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    7,
+                    464,
+                    111,
+                    149
+                ],
+                "expected": [
+                    "强化"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "装备进化"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 652,
+                "y": 166
+            }
+        }
+    },
+    "给钱": {
+        "recognition": {
+            "type": "ColorMatch",
+            "param": {
+                "roi": [
+                    697,
+                    619,
+                    181,
+                    35
+                ],
+                "lower": [
+                    [
+                        255,
+                        207,
+                        17
+                    ]
+                ],
+                "upper": [
+                    [
+                        255,
+                        207,
+                        17
+                    ]
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    724,
+                    624,
+                    127,
+                    24
+                ]
+            }
+        },
+        "$__mpe_code": {
+            "position": {
+                "x": 1932,
+                "y": 136
+            }
+        }
+    },
+    "自动随机进化": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    637,
+                    550,
+                    224,
+                    75
+                ],
+                "expected": [
+                    "自动随机进化"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "给钱"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 1612,
+                "y": 166
+            }
+        }
+    },
+    "菜单2": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    25,
+                    592,
+                    82,
+                    125
+                ],
+                "expected": [
+                    "菜单"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    52,
+                    637,
+                    25,
+                    19
+                ]
+            }
+        },
+        "next": [
+            "强化"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 332,
+                "y": 152
+            }
+        }
+    },
+    "装备进化": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    128,
+                    91,
+                    205,
+                    514
+                ],
+                "expected": [
+                    "装备进化"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "随机进化"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 972,
+                "y": 166
+            }
+        }
+    },
+    "随机进化": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    98,
+                    85,
+                    230,
+                    482
+                ],
+                "expected": [
+                    "随机进化"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "自动随机进化"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 1292,
+                "y": 166
+            }
+        }
+    }
+}

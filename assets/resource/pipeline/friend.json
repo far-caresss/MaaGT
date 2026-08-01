@@ -2,16 +2,17 @@
     "$__mpe_config_新建Pipeline7": {
         "$__mpe_code": {
             "prefix": "",
-            "lastSyncTime": 1779548779794,
+            "lastSyncTime": 1785571833957,
             "isModifiedExternally": false,
             "filePath": "D:\\wh\\jiaoben\\MaaGT\\MaaGT\\assets\\resource\\pipeline\\friend.json",
+            "coordinateMode": "absolute-v1",
             "savedViewport": {
-                "x": 260,
-                "y": 259,
-                "zoom": 1.15
+                "x": 358,
+                "y": 255,
+                "zoom": 1
             },
-            "filename": "新建Pipeline7",
-            "version": "v1.5.2"
+            "filename": "新建Pipeline2",
+            "version": "v1.6.1"
         }
     },
     "$__mpe_external_Return_新建Pipeline7": {
@@ -27,7 +28,7 @@
         "timeout": 60000,
         "next": [
             "[JumpBack]Return",
-            "菜单"
+            "菜单1"
         ],
         "$__mpe_code": {
             "position": {
@@ -64,7 +65,7 @@
             }
         }
     },
-    "菜单": {
+    "菜单1": {
         "recognition": {
             "type": "OCR",
             "param": {

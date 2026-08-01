@@ -1,0 +1,270 @@
+{
+    "44": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    18,
+                    142,
+                    1240,
+                    553
+                ],
+                "expected": [
+                    "圆形角斗场"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "[JumpBack]点x",
+            "[JumpBack]点击空白处关闭弹窗",
+            "[JumpBack]刷新",
+            "[JumpBack]44战斗",
+            "44打完"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 652,
+                "y": 421
+            }
+        }
+    },
+    "$__mpe_config_新建Pipeline10": {
+        "$__mpe_code": {
+            "prefix": "",
+            "coordinateMode": "absolute-v1",
+            "lastSyncTime": 1785571833963,
+            "isModifiedExternally": false,
+            "filePath": "D:\\wh\\jiaoben\\MaaGT\\MaaGT\\assets\\resource\\pipeline\\pvp_4v4.json",
+            "savedViewport": {
+                "x": 217,
+                "y": 52,
+                "zoom": 0.65
+            },
+            "filename": "新建Pipeline2",
+            "version": "v1.6.1"
+        }
+    },
+    "$__mpe_external_Return_新建Pipeline10": {
+        "$__mpe_code": {
+            "position": {
+                "x": 332,
+                "y": 277
+            }
+        }
+    },
+    "$__mpe_external_点击空白处关闭弹窗_新建Pipeline10": {
+        "$__mpe_code": {
+            "position": {
+                "x": 1657,
+                "y": 372
+            }
+        }
+    },
+    "$__mpe_external_确认_新建Pipeline10": {
+        "$__mpe_code": {
+            "position": {
+                "x": 1612,
+                "y": 694
+            }
+        }
+    },
+    "44战斗": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    1030,
+                    185,
+                    227,
+                    439
+                ],
+                "template": [
+                    "StarUp/44.png"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    1103,
+                    389,
+                    105,
+                    49
+                ]
+            }
+        },
+        "next": [
+            "开始战斗"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 972,
+                "y": 830
+            }
+        }
+    },
+    "44打完": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    1040,
+                    205,
+                    216,
+                    416
+                ],
+                "template": [
+                    "StarUp/44打完.png"
+                ]
+            }
+        },
+        "$__mpe_code": {
+            "position": {
+                "x": 972,
+                "y": 12
+            }
+        }
+    },
+    "Pvp_4v4": {
+        "post_delay": 500,
+        "timeout": 60000,
+        "next": [
+            "[JumpBack]Return",
+            "游玩2"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 12,
+                "y": 230
+            }
+        }
+    },
+    "刷新": {
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    1076,
+                    153,
+                    182,
+                    492
+                ],
+                "template": [
+                    "StarUp/刷新.png"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "$__mpe_code": {
+            "position": {
+                "x": 972,
+                "y": 312
+            }
+        }
+    },
+    "开始战斗": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    630,
+                    594,
+                    297,
+                    89
+                ],
+                "expected": [
+                    "开始战斗"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 60000,
+        "next": [
+            "[JumpBack]确认",
+            "点击空白处关闭弹窗"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 1292,
+                "y": 547
+            }
+        }
+    },
+    "游玩2": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    937,
+                    657,
+                    308,
+                    59
+                ],
+                "expected": [
+                    "游玩"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    1068,
+                    605,
+                    35,
+                    44
+                ]
+            }
+        },
+        "next": [
+            "44"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 332,
+                "y": 417
+            }
+        }
+    },
+    "点x": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    569,
+                    37,
+                    141,
+                    52
+                ],
+                "expected": [
+                    "战斗记录"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    1054,
+                    59,
+                    6,
+                    10
+                ]
+            }
+        },
+        "$__mpe_code": {
+            "position": {
+                "x": 972,
+                "y": 547
+            }
+        }
+    }
+}

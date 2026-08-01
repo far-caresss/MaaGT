@@ -1,14 +1,15 @@
 import sys
 
 from maa.agent.agent_server import AgentServer
-from maa.toolkit import Toolkit
+from maa.tasker import Tasker
 
 import my_action
 import my_reco
-
+import ExpressionRecognition
 
 def main():
-    Toolkit.init_option("./")
+    # 设置日志目录（相对 interface.json 所在目录，即 assets/）
+    Tasker.set_log_dir("../debug")
 
     if len(sys.argv) < 2:
         print("Usage: python main.py <socket_id>")

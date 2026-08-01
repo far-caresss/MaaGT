@@ -53,62 +53,20 @@
         }
     ],
     // 可选的 agent 示例
-    // "agent": {
-    //     "child_exec": "python",
-    //     "child_args": [
-    //         "./agent/main.py"
-    //     ]
-    // },
+    "agent": {
+        "child_exec": "python",
+        "child_args": [
+            "../agent/main.py"
+        ]
+    },
     "import": [
         "tasks/StartUp.json",
         "tasks/Shop.json",
         "tasks/Receive.json",
         "tasks/Physical_strength.json",
         "tasks/Guild_check-in.json",
-        "tasks/Friend.json"
-    ],
-    "task": [
-        {
-            "name": "选项任务",
-            "entry": "MyTask2",
-            "option": [
-                "任务选项1"
-            ]
-        },
-        {
-            "name": "参数任务",
-            "entry": "MyTask3",
-            "option": [
-                "任务选项1"
-            ],
-            "pipeline_override": {}
-        },
-        {
-            "name": "带Custom的任务",
-            "entry": "MyTask4"
-        }
-    ],
-    "option": {
-        "任务选项1": {
-            "type": "select",
-            "cases": [
-                {
-                    "name": "文本1",
-                    "pipeline_override": {
-                        "OcrTask": {
-                            "text": "文本1"
-                        }
-                    }
-                },
-                {
-                    "name": "文本2",
-                    "pipeline_override": {
-                        "OcrTask": {
-                            "text": "文本2"
-                        }
-                    }
-                }
-            ]
-        }
-    }
+        "tasks/Friend.json",
+        "tasks/Random_evolution.json",
+        "tasks/Pvp_4v4.json"
+    ]
 }

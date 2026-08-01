@@ -2,17 +2,17 @@
     "$__mpe_config_新建Pipeline3": {
         "$__mpe_code": {
             "prefix": "",
-            "lastSyncTime": 1779548582843,
+            "lastSyncTime": 1785571833946,
             "isModifiedExternally": false,
             "filePath": "D:\\wh\\jiaoben\\MaaGT\\MaaGT\\assets\\resource\\pipeline\\shop.json",
             "coordinateMode": "absolute-v1",
             "savedViewport": {
-                "x": -303,
-                "y": 82,
-                "zoom": 0.99
+                "x": -935,
+                "y": 165,
+                "zoom": 0.86
             },
-            "filename": "新建Pipeline3",
-            "version": "v1.5.3"
+            "filename": "新建Pipeline2",
+            "version": "v1.6.1"
         }
     },
     "$__mpe_external_Return_新建Pipeline3": {
@@ -42,6 +42,34 @@
             "position": {
                 "x": 12,
                 "y": 12
+            }
+        }
+    },
+    "买金币": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    275,
+                    446,
+                    994,
+                    98
+                ],
+                "expected": [
+                    "免费"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "确认.免费"
+        ],
+        "$__mpe_code": {
+            "position": {
+                "x": 972,
+                "y": 271
             }
         }
     },
@@ -227,34 +255,6 @@
             "position": {
                 "x": 652,
                 "y": 202
-            }
-        }
-    },
-    "买金币": {
-        "recognition": {
-            "type": "OCR",
-            "param": {
-                "roi": [
-                    275,
-                    446,
-                    994,
-                    98
-                ],
-                "expected": [
-                    "免费"
-                ]
-            }
-        },
-        "action": {
-            "type": "Click"
-        },
-        "next": [
-            "确认.免费"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 972,
-                "y": 271
             }
         }
     },

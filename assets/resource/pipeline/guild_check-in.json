@@ -2,16 +2,17 @@
     "$__mpe_config_新建Pipeline6": {
         "$__mpe_code": {
             "prefix": "",
-            "lastSyncTime": 1777910698508,
+            "lastSyncTime": 1785571833947,
             "isModifiedExternally": false,
             "filePath": "D:\\wh\\jiaoben\\MaaGT\\MaaGT\\assets\\resource\\pipeline\\guild_check-in.json",
+            "coordinateMode": "absolute-v1",
             "savedViewport": {
-                "x": 458,
-                "y": 227,
+                "x": 457,
+                "y": 299,
                 "zoom": 1.14
             },
-            "filename": "新建Pipeline6",
-            "version": "v1.5.2"
+            "filename": "新建Pipeline2",
+            "version": "v1.6.1"
         }
     },
     "$__mpe_external_Return_新建Pipeline6": {

@@ -12,14 +12,14 @@
     ]
   },
   "log": {
-    "dir": "D:\\wh\\tool\\MaaPipelineExtremer-windows-amd64-v1.5.2\\MaaPipelineExtremer-windows-amd64\\logs",
+    "dir": "D:\\wh\\tool\\MaaPipelineExtremer-windows-amd64-v1.6.1\\MaaPipelineExtremer-windows-amd64\\logs",
     "level": "INFO",
     "push_to_client": true
   },
   "maafw": {
     "enabled": true,
-    "lib_dir": "D:\\wh\\tool\\MaaPipelineExtremer-windows-amd64-v1.5.2\\MaaPipelineExtremer-windows-amd64\\resources\\maafw\\bin",
-    "resource_dir": "D:\\wh\\tool\\MaaPipelineExtremer-windows-amd64-v1.5.2\\MaaPipelineExtremer-windows-amd64\\resources\\resource"
+    "lib_dir": "D:\\wh\\tool\\MaaPipelineExtremer-windows-amd64-v1.6.1\\MaaPipelineExtremer-windows-amd64\\resources\\maafw\\bin",
+    "resource_dir": "D:\\wh\\tool\\MaaPipelineExtremer-windows-amd64-v1.6.1\\MaaPipelineExtremer-windows-amd64\\resources\\resource"
   },
   "server": {
     "host": "localhost",

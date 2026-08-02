@@ -1,21 +1,21 @@
 import sys
 
 from maa.agent.agent_server import AgentServer
-from maa.tasker import Tasker
+from maa.toolkit import Toolkit
 
 import my_action
 import my_reco
 import ExpressionRecognition
 
+
 def main():
-    # 设置日志目录（相对 interface.json 所在目录，即 assets/）
-    Tasker.set_log_dir("../debug")
+    Toolkit.init_option("./")
 
     if len(sys.argv) < 2:
         print("Usage: python main.py <socket_id>")
         print("socket_id is provided by AgentIdentifier.")
         sys.exit(1)
-        
+
     socket_id = sys.argv[-1]
 
     AgentServer.start_up(socket_id)

@@ -108,6 +108,13 @@ def install_resource():
         install_path / "resource",
         dirs_exist_ok=True,
     )
+    # MPE 任务定义文件：interface.json 的 import 字段按相对路径（interface.json 同目录）引用它们，
+    # 因此必须随包一并复制到 install/tasks，否则打包后任务列表会缺失
+    shutil.copytree(
+        working_dir / "assets" / "tasks",
+        install_path / "tasks",
+        dirs_exist_ok=True,
+    )
     shutil.copy2(
         working_dir / "assets" / "interface.json",
         install_path,

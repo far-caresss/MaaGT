@@ -35,15 +35,15 @@
         "$__mpe_code": {
             "prefix": "",
             "coordinateMode": "absolute-v1",
-            "lastSyncTime": 1785571833963,
+            "lastSyncTime": 1785684387284,
             "isModifiedExternally": false,
             "filePath": "D:\\wh\\jiaoben\\MaaGT\\MaaGT\\assets\\resource\\pipeline\\pvp_4v4.json",
             "savedViewport": {
-                "x": 217,
-                "y": 52,
-                "zoom": 0.65
+                "x": 69,
+                "y": 34,
+                "zoom": 0.75
             },
-            "filename": "新建Pipeline2",
+            "filename": "新建Pipeline7",
             "version": "v1.6.1"
         }
     },

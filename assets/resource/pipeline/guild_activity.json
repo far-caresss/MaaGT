@@ -1,0 +1,77 @@
+{
+    "GuildActivity": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "GuildActivityRouter",
+                "custom_action_param": {}
+            }
+        },
+        "timeout": 900000
+    },
+    "GuildLobbyPanel": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    975,
+                    85,
+                    130,
+                    30
+                ]
+            }
+        }
+    },
+    "GuildActivityCard": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    990,
+                    145,
+                    290,
+                    55
+                ]
+            }
+        }
+    },
+    "ArenaStatus": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    935,
+                    198,
+                    160,
+                    34
+                ]
+            }
+        }
+    },
+    "ArenaTabs": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    960,
+                    655,
+                    290,
+                    40
+                ]
+            }
+        }
+    },
+    "DigPanel": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    930,
+                    240,
+                    350,
+                    320
+                ]
+            }
+        }
+    }
+}

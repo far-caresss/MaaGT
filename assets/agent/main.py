@@ -3,6 +3,7 @@ import sys
 from maa.agent.agent_server import AgentServer
 from maa.toolkit import Toolkit
 
+import guild_activity
 import guild_raid
 import my_action
 import my_reco

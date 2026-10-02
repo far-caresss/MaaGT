@@ -1,8 +1,88 @@
 {
     "task": [
         {
-            "name": "公会协力讨伐",
-            "entry": "GuildRaid"
+            "name": "公会活动",
+            "entry": "GuildActivity",
+            "option": [
+                "队伍配置"
+            ]
         }
-    ]
+    ],
+    "option": {
+        "队伍配置": {
+            "type": "input",
+            "label": "队伍配置",
+            "description": "**自动识别当前轮换的公会活动**（周期内的那张活动卡显示在最上方），识别后跑对应流程。\n\n⚠️ 目前只有「公会协力讨伐」已实现；若识别到「地牢王国竞技场」或「陨石挖掘计划」，会**不执行任何操作**并退出（流程待开发）。\n\n每队一个输入框，格式 `预设名:属性`（半角 / 全角冒号都行）。\n\n- **预设名**：游戏内「选择预设」弹窗里的名字，代码会用它 OCR 定位并点击该行\n- **属性**：`fire` / `water` / `earth` / `light` / `dark` / `virtual`（也能写中文 `火`/`水`/`土`/`光`/`暗`/`虚`）\n\n从上到下即优先级，平局时靠前的队伍优先出战。**留空表示不用这队**。\n\n最多可填 6 队。单次运行上场队数 = min(剩余次数, 可识别 BOSS 数)（当前每日 3 次），其余队伍作为**候选池** —— 算法会从全部已填队伍里挑克制最优的一组上场。\n\n全部留空时会退回读取 `assets/config/teams.json`。\n\n⚠️ 队伍英雄不要跨预设重复（同一个英雄只能出现在 1 个预设里）。",
+            "inputs": [
+                {
+                    "name": "队伍1",
+                    "label": "第 1 队（优先级最高）",
+                    "description": "格式 `预设名:属性`，例如 `我的土队:earth`",
+                    "default": "",
+                    "pipeline_type": "string",
+                    "verify": "^$|^[^:：]+[:：](fire|water|earth|light|dark|virtual|火|水|土|光|暗|虚)$|^(fire|water|earth|light|dark|virtual|火|水|土|光|暗|虚)[:：][^:：]+$",
+                    "pattern_msg": "格式 `预设名:属性`，顺序可颠倒，属性支持中文"
+                },
+                {
+                    "name": "队伍2",
+                    "label": "第 2 队",
+                    "description": "格式 `预设名:属性`，例如 `我的暗队:dark`",
+                    "default": "",
+                    "pipeline_type": "string",
+                    "verify": "^$|^[^:：]+[:：](fire|water|earth|light|dark|virtual|火|水|土|光|暗|虚)$|^(fire|water|earth|light|dark|virtual|火|水|土|光|暗|虚)[:：][^:：]+$",
+                    "pattern_msg": "格式 `预设名:属性`，顺序可颠倒，属性支持中文"
+                },
+                {
+                    "name": "队伍3",
+                    "label": "第 3 队",
+                    "description": "格式 `预设名:属性`，例如 `我的虚队:virtual`",
+                    "default": "",
+                    "pipeline_type": "string",
+                    "verify": "^$|^[^:：]+[:：](fire|water|earth|light|dark|virtual|火|水|土|光|暗|虚)$|^(fire|water|earth|light|dark|virtual|火|水|土|光|暗|虚)[:：][^:：]+$",
+                    "pattern_msg": "格式 `预设名:属性`，顺序可颠倒，属性支持中文"
+                },
+                {
+                    "name": "队伍4",
+                    "label": "第 4 队",
+                    "description": "格式 `预设名:属性`，例如 `我的光队:light`。队伍池越大，算法越可能凑出克制更好的组合",
+                    "default": "",
+                    "pipeline_type": "string",
+                    "verify": "^$|^[^:：]+[:：](fire|water|earth|light|dark|virtual|火|水|土|光|暗|虚)$|^(fire|water|earth|light|dark|virtual|火|水|土|光|暗|虚)[:：][^:：]+$",
+                    "pattern_msg": "格式 `预设名:属性`，顺序可颠倒，属性支持中文"
+                },
+                {
+                    "name": "队伍5",
+                    "label": "第 5 队",
+                    "description": "格式 `预设名:属性`，例如 `我的火队:fire`。队伍池越大，算法越可能凑出克制更好的组合",
+                    "default": "",
+                    "pipeline_type": "string",
+                    "verify": "^$|^[^:：]+[:：](fire|water|earth|light|dark|virtual|火|水|土|光|暗|虚)$|^(fire|water|earth|light|dark|virtual|火|水|土|光|暗|虚)[:：][^:：]+$",
+                    "pattern_msg": "格式 `预设名:属性`，顺序可颠倒，属性支持中文"
+                },
+                {
+                    "name": "队伍6",
+                    "label": "第 6 队（上限）",
+                    "description": "格式 `预设名:属性`，例如 `我的水队:water`。当前界面上限为 6 队",
+                    "default": "",
+                    "pipeline_type": "string",
+                    "verify": "^$|^[^:：]+[:：](fire|water|earth|light|dark|virtual|火|水|土|光|暗|虚)$|^(fire|water|earth|light|dark|virtual|火|水|土|光|暗|虚)[:：][^:：]+$",
+                    "pattern_msg": "格式 `预设名:属性`，顺序可颠倒，属性支持中文"
+                }
+            ],
+            "pipeline_override": {
+                "GuildActivity": {
+                    "custom_action_param": {
+                        "teams": [
+                            "{队伍1}",
+                            "{队伍2}",
+                            "{队伍3}",
+                            "{队伍4}",
+                            "{队伍5}",
+                            "{队伍6}"
+                        ]
+                    }
+                }
+            }
+        }
+    }
 }

@@ -452,3 +452,12 @@ tools/ImageCropper/**/*.png
 
 config
 debug
+
+# 本地专属，不入库（仓库是公开的）：
+#   本机路径 / 设备信息、以及开发进度 / 设计方案这类"比较个人"的文档
+#   以后新写的个人文档直接放这个目录，就不会被推上去
+docs/local/
+
+# MaaPipelineExtremer 的项目配置：含本机绝对路径（log.dir / maafw.lib_dir），
+# 且没有任何代码引用（install.py 不复制、interface.json 不 import）→ 只留本地
+/assets/config.json

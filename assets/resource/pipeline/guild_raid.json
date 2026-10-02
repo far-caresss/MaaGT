@@ -105,6 +105,48 @@
             }
         }
     },
+    "RaidNoticeDialog": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    290,
+                    90,
+                    700,
+                    540
+                ]
+            }
+        }
+    },
+    "RaidHeroSlots": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    20,
+                    590,
+                    545,
+                    55
+                ]
+            }
+        }
+    },
+    "RaidPracticeButton": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    860,
+                    618,
+                    145,
+                    58
+                ],
+                "expected": [
+                    "演习"
+                ]
+            }
+        }
+    },
     "RaidEnterButton": {
         "recognition": {
             "type": "OCR",
@@ -133,22 +175,6 @@
                 ],
                 "expected": [
                     "公会"
-                ]
-            }
-        }
-    },
-    "RaidPlayCard": {
-        "recognition": {
-            "type": "OCR",
-            "param": {
-                "roi": [
-                    970,
-                    130,
-                    280,
-                    120
-                ],
-                "expected": [
-                    "死城频率"
                 ]
             }
         }

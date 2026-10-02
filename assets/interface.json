@@ -67,6 +67,7 @@
         "tasks/Guild_check-in.json",
         "tasks/Friend.json",
         "tasks/Random_evolution.json",
-        "tasks/Pvp_4v4.json"
+        "tasks/Pvp_4v4.json",
+        "tasks/Guild_raid.json"
     ]
 }

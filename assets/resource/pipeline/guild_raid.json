@@ -1,0 +1,156 @@
+{
+    "$__mpe_config_公会协力讨伐": {
+        "$__mpe_code": {
+            "prefix": "",
+            "lastSyncTime": 0,
+            "isModifiedExternally": false,
+            "filePath": "D:\\wh\\jiaoben\\MaaGT\\MaaGT\\assets\\resource\\pipeline\\guild_raid.json",
+            "coordinateMode": "absolute-v1",
+            "savedViewport": {
+                "x": 0,
+                "y": 0,
+                "zoom": 1.0
+            },
+            "filename": "公会协力讨伐",
+            "version": "v1.6.1"
+        }
+    },
+    "GuildRaid": {
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "GuildRaidOrchestrator",
+                "custom_action_param": {}
+            }
+        },
+        "timeout": 900000
+    },
+    "RaidEntries": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    1198,
+                    602,
+                    74,
+                    34
+                ],
+                "only_rec": true
+            }
+        }
+    },
+    "RaidPresetNames": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    285,
+                    95,
+                    260,
+                    540
+                ]
+            }
+        }
+    },
+    "RaidAutoBattle": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "自动战斗"
+                ]
+            }
+        }
+    },
+    "RaidResultPanel": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    400,
+                    15,
+                    480,
+                    45
+                ],
+                "expected": [
+                    "本场结果"
+                ]
+            }
+        }
+    },
+    "RaidResultExit": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    840,
+                    615,
+                    430,
+                    85
+                ],
+                "expected": [
+                    "退出",
+                    "确认"
+                ]
+            }
+        }
+    },
+    "RaidPopupHint": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "expected": [
+                    "点击空白处关闭弹窗"
+                ]
+            }
+        }
+    },
+    "RaidEnterButton": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    1040,
+                    620,
+                    160,
+                    60
+                ],
+                "expected": [
+                    "入场"
+                ]
+            }
+        }
+    },
+    "RaidGuildEntry": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    150,
+                    650,
+                    200,
+                    65
+                ],
+                "expected": [
+                    "公会"
+                ]
+            }
+        }
+    },
+    "RaidPlayCard": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    970,
+                    130,
+                    280,
+                    120
+                ],
+                "expected": [
+                    "死城频率"
+                ]
+            }
+        }
+    }
+}

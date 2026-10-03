@@ -72,30 +72,18 @@
         }
     },
     "44战斗": {
+        "desc": "比较三个对手的队伍数值，挑最低的一个「开始战斗」（见 agent/PvpWeakestPicker.py）",
         "recognition": {
-            "type": "TemplateMatch",
+            "type": "Custom",
             "param": {
-                "roi": [
-                    1030,
-                    185,
-                    227,
-                    439
-                ],
-                "template": [
-                    "StarUp/44.png"
-                ]
+                "custom_recognition": "PvpWeakestPicker",
+                "custom_recognition_param": {
+                    "metric": "dps"
+                }
             }
         },
         "action": {
-            "type": "Click",
-            "param": {
-                "target": [
-                    1103,
-                    389,
-                    105,
-                    49
-                ]
-            }
+            "type": "Click"
         },
         "next": [
             "开始战斗"
@@ -104,6 +92,27 @@
             "position": {
                 "x": 972,
                 "y": 830
+            }
+        }
+    },
+    "对手数值格": {
+        "desc": "空壳 OCR 节点：PvpWeakestPicker 用 pipeline_override 改它的 roi 去读对手数值，请勿删除",
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    998,
+                    268,
+                    62,
+                    24
+                ],
+                "only_rec": true
+            }
+        },
+        "$__mpe_code": {
+            "position": {
+                "x": 972,
+                "y": 1010
             }
         }
     },
@@ -169,6 +178,7 @@
         }
     },
     "开始战斗": {
+        "desc": "点开战确认，然后轮询等战斗结束（以 5s 间隔一直判「确认」；「确认」点掉后再一直判奖励窗「点击空白处关闭弹窗」）。原来的 post_delay 60000 是盲等，战斗久了会提前收尾。",
         "recognition": {
             "type": "OCR",
             "param": {
@@ -186,7 +196,8 @@
         "action": {
             "type": "Click"
         },
-        "post_delay": 60000,
+        "rate_limit": 5000,
+        "timeout": 240000,
         "next": [
             "[JumpBack]确认",
             "点击空白处关闭弹窗"

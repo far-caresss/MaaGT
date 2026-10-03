@@ -8,6 +8,7 @@ import guild_raid
 import my_action
 import my_reco
 import ExpressionRecognition
+import PvpWeakestPicker
 
 
 def main():

@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 """公会协力讨伐：识别首领属性 → 按配置队伍分配 → 逐个作战。
 
-设计文档：docs/local/公会协力讨伐-设计方案.md（本地专属，不入库）
-
-流程（已实测，坐标基于 1280x720）：
+流程（坐标基于 1280x720）：
     首领列表页 --图标框中心+(120,54)--> 详情页
     详情页 --≡(770,647)--> 「选择预设」弹窗 --点名字框中心--> 详情页
     详情页 --演习(905,647)/入场(1115,647)--> 战斗 --自动战斗--> 结果 --退出--> 首领列表页
 
-已切换为「入场」（消耗挑战次数，2026-10-02 用户确认）；把 PRACTICE_MODE 改回 True 可退回「演习」。
+入场会消耗挑战次数、演习不会，由 PRACTICE_MODE 切换（改回 True 即退回演习）。
 """
 
 from __future__ import annotations
@@ -55,7 +53,7 @@ RELATION_COUNTER = "counter"      # 队伍克制首领
 RELATION_NEUTRAL = "neutral"      # 互不克制
 RELATION_COUNTERED = "countered"  # 队伍被首领克制
 
-#: False = 走「入场」（消耗挑战次数，2026-10-02 用户已确认）；True = 走「演习」
+#: False = 走「入场」（消耗挑战次数）；True = 走「演习」
 PRACTICE_MODE = False
 
 # ---------------- 坐标 ----------------
@@ -85,18 +83,18 @@ PRESET_SCROLL_FROM = (640, 540)
 PRESET_SCROLL_TO = (640, 240)
 PRESET_SCROLL_MAX = 8
 
-#: 「选择预设」弹窗内行的点击 x。实测点名字文字无效，必须点行中间。
+#: 「选择预设」弹窗内行的点击 x。点名字文字无效，必须点行中间。
 PRESET_ROW_TAP_X = 640
 
-# ---------------- 详情页「打不了」判据（2026-10-02 真机实测） ----------------
+# ---------------- 详情页「打不了」判据 ----------------
 #: 英雄栏出现这个词 = 该预设里有英雄今日已参与
 HERO_UNUSABLE_KEYWORD = "无法使用"
 #: 「注意」拦截弹窗正文特征词（子串匹配，容忍 OCR 抖动）
 NOTICE_KEYWORDS: tuple[str, ...] = ("无法再次参与", "当日已参与")
-#: 详情页左上角 ← 返回，复用 startup.json 的 `返回`（白色 ColorMatch，实测箭头
+#: 详情页左上角 ← 返回，复用 startup.json 的 `返回`（白色 ColorMatch，箭头
 #: bbox (32,17)-(58,53)，落在它的 ROI [20,7,53,58] 内）。
-#: ⚠️ 曾用「入场」按钮颜色判可用性：实测可用态均值 149、禁用态 124.7，差值太小
-#: 会把亮的按钮误判成灰（真机踩过）→ **已废弃**，只看英雄栏的「无法使用」。
+#: ⚠️ 曾用「入场」按钮颜色判可用性：可用态均值 149、禁用态 124.7，差值太小
+#: 会把亮的按钮误判成灰 → **已废弃**，只看英雄栏的「无法使用」。
 NODE_DETAIL_BACK = "返回"
 
 # ---------------- 字形匹配 ----------------
@@ -136,7 +134,7 @@ NODE_POPUP_HINT = "RaidPopupHint"     # 等价副本，guild_activity.py 还在�
 #: 既有节点（startup.json）「点击空白处关闭弹窗」：OCR 判据 + 点 (1236,48)。
 #: ⚠️ **只借它的"识别"**（`run_recognition`，一次就返回）；
 #: **绝不要 `run_task` 它** —— 节点没命中时框架会一直重判到超时，
-#: 真机踩过：根本没有弹窗，却一直卡在判「点击空白处关闭弹窗」这句文案上。
+#: 弹窗不在时会一直卡在判「点击空白处关闭弹窗」这句文案上。
 NODE_CLOSE_POPUP = "点击空白处关闭弹窗"
 #: 「注意」拦截弹窗（如"当日已参与公会协力讨伐的英雄，无法再次参与。"）
 NODE_NOTICE_DIALOG = "RaidNoticeDialog"
@@ -150,7 +148,7 @@ NODE_GUILD_ENTRY = "RaidGuildEntry"
 #: 静态匹配名字下期必失效；改为 Python 侧要求命中中文（见 `_activity_card_box`）。
 NODE_PLAY_CARD = "GuildActivityCard"
 #: 公会大厅右侧面板标题。用来判断"是否在公会大厅"——因为活动卡那一带的文字
-#: 在别的活动页也会出现（实测：竞技场页同位置有「未找到记录」），光靠 ROI 治不了。
+#: 在别的活动页也会出现（例如竞技场页同位置有「未找到记录」），光靠 ROI 治不了。
 NODE_LOBBY_PANEL = "GuildLobbyPanel"
 #: 大厅面板标题的固定文案（UI 文案，不随活动名变）
 LOBBY_KEYWORD = "公会玩法"
@@ -546,7 +544,7 @@ class GuildRaidOrchestrator(CustomAction):
             log("没有剩余次数，结束")
             return
 
-        # 每场重新规划（替掉原来的"进循环前一次性算完"，即 §7-6 的替补重算）：
+        # 每场重新规划（不是"进循环前一次性算完"）：
         # 一次运行里「队伍最多上一场、BOSS 最多打一次」，所以每轮都从
         # 「剩余次数 + 没打过的 BOSS + 没试过的队伍」重算 → 某队打不了时后面的队伍顶上。
         attempts: set[str] = set()
@@ -649,7 +647,7 @@ class GuildRaidOrchestrator(CustomAction):
 
         这是**固定 UI 文案**，不随活动名/期数变，所以可以放心匹配。
         没有这道门的话，别的活动页右侧面板同一水平位置的文字
-        （实测竞技场页是「未找到记录」）会被误当成活动卡。
+        （竞技场页同位置是「未找到记录」）会被误当成活动卡。
         """
         if image is None:
             return False
@@ -722,7 +720,7 @@ class GuildRaidOrchestrator(CustomAction):
         """若出现「点击空白处关闭弹窗」提示，则点空白处关闭。
 
         ⚠️ **不用 `context.run_task(...)`**：节点没命中时框架会一直重判到超时
-        （真机踩过：已经没有弹窗了，却一直卡在判这句文案）。
+        （弹窗不在时会一直卡在判这句文案）。
         这里只借既有节点的**识别**（`run_recognition`，一次就返回），点击沿用
         `TAP_BLANK_TO_CLOSE`（与该节点自己的 action target 一致）。
         识别不到直接返回 False —— **不盲点**。
@@ -742,7 +740,7 @@ class GuildRaidOrchestrator(CustomAction):
     ) -> tuple[int, int, int, int] | None:
         """「注意」拦截弹窗是否开着：正文特征词 **且** 有「确认」按钮。
 
-        节点故意不带 `expected`（§8：硬匹配失败会整页误判），这里按子串匹配；
+        节点故意不带 `expected`（硬匹配失败会整页误判），这里按子串匹配；
         两项找不全就返回 None —— 先判后点。
         """
         if image is None:
@@ -800,7 +798,7 @@ class GuildRaidOrchestrator(CustomAction):
         return self._wait_boss_list(context, 6.0)
 
     def _close_preset_popup_if_present(self, context: Context) -> bool:
-        """「选择预设」弹窗**确实开着**才点它的 X（先判后点，替掉原来的无条件盲点）。
+        """「选择预设」弹窗**确实开着**才点它的 X（先判后点，不再无条件盲点）。
 
         判据：`RaidPresetNames` 的 ROI 在弹窗内，弹窗开着才有预设名可读。
         """

@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 """4v4 圆形角斗场：比较三个对手的队伍数值，挑最弱的那个「开始战斗」。
 
-背景
-----
-原来 `pvp_4v4.json` 的 `44战斗` 节点是 `TemplateMatch(StarUp/44.png)` + 固定
-`target`，不管对手是谁，永远点中间那一个。现在改成：
+工作方式
+--------
 
 1. OCR 三行「队伍每秒伤害」（或「队伍韧性值」）；
 2. 取数值最低的一行；
@@ -50,7 +48,7 @@ from maa.define import OCRResult
 #: 借用的 OCR 节点名（定义在 pvp_4v4.json 里，本模块用 pipeline_override 改 ROI）
 PROBE_NODE = "对手数值格"
 
-#: 日志落盘（VS Code 插件会吞掉 agent 的 stdout，只有落盘才查得到 —— 见进度文档 §8）
+#: 日志落盘（插件会吞掉 agent 的 stdout，只有落盘才查得到）
 LOG_FILE = Path(__file__).resolve().parent.parent.parent / "debug" / "pvp_4v4.log"
 
 #: 三行「队伍每秒伤害」数值格 ROI (x, y, w, h)

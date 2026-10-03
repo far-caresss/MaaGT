@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """公会活动统一入口：进公会大厅 → 点最上方活动卡 → 结构判据识别 → 分派给对应流程。
 
-设计要点（2026-10-02 与用户确认，详见 `docs/local/公会协力讨伐-开发进度.md` §14，本地专属不入库）：
+设计要点：
 
 1. **单一入口 + 自动分派**：任务列表里只暴露「公会活动」一个任务，
    识别出当前是哪个活动后再分派，用户不用管本期轮到哪个。
@@ -9,8 +9,8 @@
    但**活动名每期都变**（讨伐本期叫「死城频率」，下期可能换），
    所以判据一律用各活动页面独有的稳定元素，**绝不写死名字**。
 3. **安全优先**：认不出当前是哪个活动时，**不点任何按钮**，直接退出并告警。
-   点错卡片可能进到别的活动，接着乱点就可能误触消耗（见文档 §9 纪律）。
-4. **从任意页面都能进来（方案 A）**：导航在 agent 侧完成，**复用既有 `Return` 节点**
+   点错卡片可能进到别的活动，接着乱点就可能误触消耗。
+4. **从任意页面都能进来**：导航在 agent 侧完成，**复用既有 `Return` 节点**
    （`pipeline/startup.json`，与其它任务的 `next: ["[JumpBack]Return", …]` 同一套用法）：
    关弹窗（取消/确认/点击空白处/人物窗）→ 逐层点「返回」→ 回到主界面（旅店）。
    到主界面后点底栏「公会」进大厅，再读最上方活动卡。
@@ -64,7 +64,7 @@ NODE_ARENA_TABS = "ArenaTabs"
 NODE_ARENA_STATUS = "ArenaStatus"
 NODE_DIG_PANEL = "DigPanel"
 
-#: 竞技场判据：**任一**强关键词命中即可（实测 OCR 会把「首领信息」读成「领信息」，
+#: 竞技场判据：**任一**强关键词命中即可（OCR 会把「首领信息」读成「领信息」，
 #: 要求两个词都命中太脆，会让路由白跑一趟导航）
 ARENA_STRONG = ("兑换所", "今日竞技场")
 #: 「首领信息」的拆词兜底（整词被 OCR 切坏时仍能认）
@@ -129,11 +129,11 @@ def _ocr_all_text(context: Context, node: str, image: np.ndarray) -> str:
 def _probe_arena(context: Context, image: np.ndarray, glyphs: dict) -> str | None:
     """竞技场判据：任一强关键词命中即可（多信号容错）。
 
-    两个 ROI 都是实测的（2026-10-02，游戏停在该页）：
+    两个 ROI：
     - `ArenaTabs [960,655,290,40]`：兑换所 (981,667,51,19) / 排名 (1088,669) / 首领信息 (1173,668)
     - `ArenaStatus [935,198,160,34]`：「今日竞技场状况」(950,207,112,19)
 
-    ⚠️ 实测 OCR 会把「首领信息」读成「领信息」，所以**不要求整词**：
+    ⚠️ OCR 会把「首领信息」读成「领信息」，所以**不要求整词**：
     任一强词命中就算（这两个词都是竞技场独有），另有拆词兜底。
     """
     tabs = _ocr_all_text(context, NODE_ARENA_TABS, image)
@@ -204,7 +204,7 @@ class GuildActivityRouter(CustomAction):
 
         activity = self._reach_activity(context, glyphs)
         if activity is None:
-            log("⚠️ 无法确认当前是哪个公会活动 —— 已停止操作，安全退出（见 §14 方案 A）")
+            log("⚠️ 无法确认当前是哪个公会活动 —— 已停止操作，安全退出")
             return False
 
         log(f"当前活动 = {ACTIVITY_CN.get(activity, activity)}")
@@ -226,7 +226,7 @@ class GuildActivityRouter(CustomAction):
     def _reach_activity(self, context: Context, glyphs: dict) -> str | None:
         """从**任意页面**识别出当前活动；必要时收拾页面回到主界面再走。
 
-        每步先认窗口、再决定动作（方案 A）：
+        每步先认窗口、再决定动作：
 
         | 当前窗口 | 动作 |
         |---|---|
@@ -371,7 +371,7 @@ class GuildActivityRouter(CustomAction):
         """公会大厅「最上方活动卡」的框 + 卡上文字（含中文）。
 
         先确认在公会大厅：活动卡那一带的文字在别的活动页也会出现
-        （实测竞技场页同位置是「未找到记录」），光靠 ROI 收紧治不了。
+        （竞技场页同位置是「未找到记录」），光靠 ROI 收紧治不了。
         """
         if image is None or not self._in_guild_lobby(context, image):
             return None

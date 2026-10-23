@@ -52,6 +52,19 @@
             }
         }
     },
+    "RaidPresetSettings": {
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    580,
+                    610,
+                    140,
+                    50
+                ]
+            }
+        }
+    },
     "RaidAutoBattle": {
         "recognition": {
             "type": "OCR",

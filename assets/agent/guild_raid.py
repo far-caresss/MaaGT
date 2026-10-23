@@ -119,15 +119,33 @@ BATTLE_START_TIMEOUT = 40
 BATTLE_END_TIMEOUT = 120
 #: 战斗中轮询「退出」的间隔（一场战斗 60~90s，判太密没意义还费截图）
 BATTLE_POLL_INTERVAL = 5
+#: 读「剩余挑战次数」失败时的重试次数（连续失败 → 取消本任务）
+BATTLES_READ_RETRY = 3
+BATTLES_READ_INTERVAL = 1.0
+#: 点首领卡片进详情页的重试次数 / 每次等详情页出现的预算（秒）
+DETAIL_ENTRY_RETRY = 3
+DETAIL_ENTRY_WAIT = 4.0
+#: 同一 (槽位, 队伍) 最多尝试次数（超了换一对，**不**拉黑整支队伍）
+MAX_PAIR_ATTEMPTS = 2
 
 #: `_wait_battle_entry` 的三种返回
 BATTLE_READY = "ready"      # 已点到「自动战斗」
 BATTLE_NOTICE = "notice"    # 弹了「注意」（英雄当日已参与），已点「确认」关掉
 BATTLE_TIMEOUT = "timeout"  # 一直没等到
 
+#: `_fight` 的三种返回
+FIGHT_OK = "ok"              # 本场打起来了（次数已消耗）
+FIGHT_UNUSABLE = "unusable"  # 游戏确认该队伍今日不可用 → 拉黑该队伍
+FIGHT_FAILED = "failed"      # 没打起来（导航 / 识别类）→ **不**拉黑队伍，换一对再试
+
 #: 识别节点名（定义在 pipeline/*.json）
 NODE_ENTRIES = "RaidEntries"
 NODE_PRESET_NAMES = "RaidPresetNames"
+#: 「选择预设」弹窗底部「预设设置」按钮 —— **弹窗独有**的文案，用它做第二道判据
+#: （`TAP_PRESET_SETTINGS` 就是它的位置；本模块只用它做判据，不点它）
+NODE_PRESET_SETTINGS = "RaidPresetSettings"
+#: 上面那个按钮上的字。只要求命中 `预设` 两个字，容忍 OCR 把 4 个字读残（如「预设设」）
+PRESET_SETTINGS_KEYWORD = "预设"
 NODE_AUTO_BATTLE = "RaidAutoBattle"
 NODE_RESULT_EXIT = "RaidResultExit"
 NODE_POPUP_HINT = "RaidPopupHint"     # 等价副本，guild_activity.py 还在用
@@ -158,6 +176,10 @@ _TRAILING_COMMA = re.compile(r",(\s*[}\]])")
 
 #: 活动卡/标题必须是中文（活动名每期都变，不写死但也不能把 HUD 数字当卡片）
 _CJK_RE = re.compile(r"[\u4e00-\u9fff]{2,}")
+
+#: `剩余挑战次数 x/y`。**必须按 `x/y` 形态解析**：曾用 `re.findall(r"\d+")` 取第一个
+#: 数字串，把 `2/3` 的误读版本 `213` 当成 213 次（见 `../踩坑记录.md` §1.9）。
+_BATTLES_RE = re.compile(r"(\d+)\s*/\s*(\d+)")
 
 
 def log(msg: str) -> None:
@@ -445,6 +467,7 @@ def choose_plan(
     teams: Sequence[Team],
     battles: int,
     banned_teams: Iterable[str] = (),
+    banned_pairs: Iterable[tuple[int, str]] = (),
 ) -> list[Assignment]:
     """选 battles 对 (首领, 队伍)，首领与队伍均不重复。
 
@@ -452,8 +475,12 @@ def choose_plan(
       1. 最大化「克制」对数
       2. 最大化「中性」对数（等价于最小化「被克」对数）
       3. 平局：优先使用配置里靠前的队伍
+
+    `banned_pairs`：`(槽位, 队伍名)` 黑名单。某一对反复打不起来时用它排除
+    **这一对**，让循环换一对继续试 —— **不拉黑整支队伍**。
     """
     banned = set(banned_teams)
+    banned_pair_set = set(banned_pairs)
     usable_bosses = [b for b in bosses if b.element]
     usable_teams = [(i, t) for i, t in enumerate(teams) if t.name not in banned]
 
@@ -462,11 +489,46 @@ def choose_plan(
         log("可用首领或队伍不足，无法分配")
         return []
 
+    # k 从大到小试：正常情况第一轮就命中；只有被 `banned_pairs` 卡住时才退到更小的 k
+    for k_try in range(k, 0, -1):
+        result = _plan_for_k(usable_teams, usable_bosses, k_try, banned_pair_set)
+        if result is None:
+            continue
+        counters, neutrals, best_plan = result
+        log(f"分配方案：克制 {counters} 对 / 中性 {neutrals} 对 / 共 {len(best_plan)} 场")
+        for a in best_plan:
+            boss_el = next((b.element for b in bosses if b.slot == a.boss_slot), None)
+            log(
+                f"  → 槽位{a.boss_slot}({ELEMENT_CN.get(boss_el or '', '?')})"
+                f" ← {a.team.name}({ELEMENT_CN.get(a.team.element, '?')}) [{a.relation}]"
+            )
+        return best_plan
+
+    log("可用首领或队伍不足，无法分配")
+    return []
+
+
+def _plan_for_k(
+    usable_teams: Sequence[tuple[int, Team]],
+    usable_bosses: Sequence[Boss],
+    k: int,
+    banned_pairs: set[tuple[int, str]],
+) -> tuple[int, int, list[Assignment]] | None:
+    """枚举「k 对 (首领, 队伍)」的最优解；无可行解返回 None。
+
+    命中 `banned_pairs`（`(槽位, 队伍名)`）的组合直接跳过 —— 那是"反复打不起来
+    的一对"，只排除**这一对**，不排除整支队伍。
+    """
     best_rank: tuple[int, int, tuple[int, ...]] | None = None
     best_plan: list[Assignment] = []
 
     for team_combo in itertools.combinations(usable_teams, k):
         for boss_combo in itertools.permutations(usable_bosses, k):
+            if any(
+                (boss.slot, team.name) in banned_pairs
+                for (_, team), boss in zip(team_combo, boss_combo)
+            ):
+                continue
             assigns: list[Assignment] = []
             counters = neutrals = 0
             for (_, team), boss in zip(team_combo, boss_combo):
@@ -480,14 +542,9 @@ def choose_plan(
             if best_rank is None or _rank_better(rank, best_rank):
                 best_rank, best_plan = rank, assigns
 
-    log(f"分配方案：克制 {best_rank[0]} 对 / 中性 {best_rank[1]} 对 / 共 {len(best_plan)} 场")
-    for a in best_plan:
-        boss_el = next((b.element for b in bosses if b.slot == a.boss_slot), None)
-        log(
-            f"  → 槽位{a.boss_slot}({ELEMENT_CN.get(boss_el or '', '?')})"
-            f" ← {a.team.name}({ELEMENT_CN.get(a.team.element, '?')}) [{a.relation}]"
-        )
-    return best_plan
+    if best_rank is None:
+        return None
+    return best_rank[0], best_rank[1], best_plan
 
 
 # ======================================================================
@@ -517,44 +574,59 @@ class GuildRaidOrchestrator(CustomAction):
         context: Context,
         param_json: str,
         nav: Callable[[Context], bool] | None = None,
-    ) -> None:
+    ) -> bool:
+        """跑完一轮讨伐；返回是否正常走完（False = 出了搞不定的问题 / 主动取消本任务）。"""
         self._nav = nav
         teams = self._load_teams(param_json)
         templates = load_glyph_templates()
         if not teams or not templates:
             log("配置或模板缺失，终止")
-            return
+            return False
 
         if not self._goto_boss_list(context):
             log("未能抵达首领列表页，终止")
-            return
+            return False
 
         image = self._screencap(context)
         if image is None:
             log("截图失败，终止")
-            return
+            return False
 
         bosses = detect_bosses(image, templates)
         if not any(b.element for b in bosses):
             log("首领属性全部识别失败，终止")
-            return
+            return False
 
-        battles = self._read_battles(context, image)
-        if battles <= 0:
+        battles = self._read_battles_with_retry(context)
+        if battles < 0:
+            log("剩余挑战次数识别失败，取消本任务")
+            return False
+        if battles == 0:
             log("没有剩余次数，结束")
-            return
+            return True
 
         # 每场重新规划（不是"进循环前一次性算完"）：
         # 一次运行里「队伍最多上一场、BOSS 最多打一次」，所以每轮都从
         # 「剩余次数 + 没打过的 BOSS + 没试过的队伍」重算 → 某队打不了时后面的队伍顶上。
-        attempts: set[str] = set()
+        attempts: set[str] = set()                      # 游戏确认"今日不可用"的队伍
+        failed_pairs: dict[tuple[int, str], int] = {}     # (槽位, 队伍) 的失败次数
+        banned_pairs: set[tuple[int, str]] = set()        # 反复打不起来的组合（不拉黑队伍）
         done_bosses: set[int] = set()
 
         while True:
-            fresh = self._screencap(context)
-            now = self._read_battles(context, fresh)
-            if now >= 0:
-                battles = now
+            now = self._read_battles_with_retry(context)
+            if now < 0:
+                # 也可能是刚退出战斗、画面还在过渡：交给带轮询的导航兜底，再读一次
+                log("剩余挑战次数读不到，先确认是否还在首领列表页")
+                if not self._goto_boss_list(context):
+                    log("无法回到首领列表页，终止")
+                    return False
+                now = self._read_battles_with_retry(context)
+                if now < 0:
+                    log("剩余挑战次数识别失败，取消本任务")
+                    return False
+
+            battles = now
             log(f"剩余次数={battles}")
             if battles <= 0:
                 log("没有剩余次数，结束")
@@ -565,18 +637,34 @@ class GuildRaidOrchestrator(CustomAction):
                 teams,
                 battles,
                 banned_teams=attempts,
+                banned_pairs=banned_pairs,
             )
             if not plan:
                 log("没有还能打的 (BOSS, 队伍) 组合，结束")
                 break
 
             assignment = plan[0]
-            if self._fight(context, assignment):
+            pair = (assignment.boss_slot, assignment.team.name)
+            status = self._fight(context, assignment)
+
+            if status == FIGHT_OK:
                 done_bosses.add(assignment.boss_slot)
                 battles -= 1
+                failed_pairs.pop(pair, None)
+            elif status == FIGHT_UNUSABLE:
+                log(f"队伍 {assignment.team.name} 今日不可用 —— 拉黑该队伍")
+                attempts.add(assignment.team.name)
             else:
-                log(f"本场失败，跳过队伍 {assignment.team.name}")
-            attempts.add(assignment.team.name)
+                # 导航 / 识别类失败：次数没被消耗，**绝不能拉黑队伍**
+                # （历史 bug：点不中卡片就把这队当"失败队伍"，最后还剩次数却没人可上）
+                failed_pairs[pair] = failed_pairs.get(pair, 0) + 1
+                log(
+                    f"本场没打起来（{pair} 第 {failed_pairs[pair]}/{MAX_PAIR_ATTEMPTS} 次）"
+                    f"—— 不拉黑队伍 {assignment.team.name}"
+                )
+                if failed_pairs[pair] >= MAX_PAIR_ATTEMPTS:
+                    banned_pairs.add(pair)
+                    log(f"槽位{pair[0]} × 队伍 {pair[1]} 反复打不起来 —— 换一对继续")
 
             # ⚠️ 这里**不主动**跑「点击空白处关闭弹窗」：该节点的判据只是一句
             # OCR 文案，万一误判就会平白点一次右上角 (1236,48) —— 不划算。
@@ -584,9 +672,10 @@ class GuildRaidOrchestrator(CustomAction):
             # （先 `_wait_boss_list` 读不到「剩余挑战次数」= 确实有东西挡着，才动手）。
             if not self._goto_boss_list(context):
                 log("无法回到首领列表页，终止")
-                return
+                return False
 
         log("协力讨伐结束")
+        return True
 
     # ------------------------------------------------------------------
     # 配置来源：界面（custom_action_param.teams）优先，全空退回 teams.json
@@ -706,7 +795,10 @@ class GuildRaidOrchestrator(CustomAction):
         for node in (NODE_PRACTICE_BUTTON, NODE_ENTER_BUTTON):
             if self._ocr_hit(context, node, image) is not None:
                 return True
-        if self._read_battles(context, image) >= 0:
+        # ⚠️ 这里**特意用宽松判据**（ROI 里还有数字就算"还在列表页"）：
+        # `2/3` 被误读成 `213` 时严格解析返回 -1 → 会被误判成"不在列表页"，
+        # 进而盲点 ≡。宽松判据宁可判成"没进详情页"，代价只是本场跳过。
+        if re.search(r"\d", self._ocr_text(context, NODE_ENTRIES, image) or ""):
             log("读不到「演习/入场」，且仍能读到剩余次数 —— 判断为没进详情页")
             return False
         log("读不到「演习/入场」，但也不在首领列表页 —— 按详情页继续（可能 OCR 抖动）")
@@ -800,12 +892,24 @@ class GuildRaidOrchestrator(CustomAction):
     def _close_preset_popup_if_present(self, context: Context) -> bool:
         """「选择预设」弹窗**确实开着**才点它的 X（先判后点，不再无条件盲点）。
 
-        判据：`RaidPresetNames` 的 ROI 在弹窗内，弹窗开着才有预设名可读。
+        两道判据**都要**满足（守则 §2「判据宁多勿少」）：
+        1. `RaidPresetNames` 的 ROI 里读得到文字；
+        2. `RaidPresetSettings` 的 ROI 里读得到 `预设` —— 那是弹窗**独有**的按钮文案。
+
+        ⚠️ 只看第 1 条会误判：首领列表页上的**首领名标签**（真机读到过 `帝国骑士`
+        @ (476,594)）也落在第 1 条的 ROI 里 → 曾在列表页上平白点过一次 (985,64)。
+        第 2 条就是"语义门"；文案按**子串**匹配，容忍 OCR 把「预设设置」读残。
         """
         image = self._screencap(context)
         if image is None:
             return False
         if not self._ocr_results(context, NODE_PRESET_NAMES, image):
+            return False
+        settings = " ".join(
+            text for text, _ in self._ocr_results(context, NODE_PRESET_SETTINGS, image)
+        )
+        if PRESET_SETTINGS_KEYWORD not in settings:
+            log("读到疑似预设名，但没读到「预设设置」—— 不点 X（避免盲点）")
             return False
         log("检测到「选择预设」弹窗，点 X 关闭")
         self._tap(context, *TAP_PRESET_CLOSE)
@@ -815,37 +919,63 @@ class GuildRaidOrchestrator(CustomAction):
     # ------------------------------------------------------------------
     # 单场作战
     # ------------------------------------------------------------------
-    def _fight(self, context: Context, assignment: Assignment) -> bool:
-        boss, team = assignment.boss_slot, assignment.team
-        log(f"开战：槽位{boss} ← {team.name}")
+    def _open_boss_detail(self, context: Context, boss: int) -> bool:
+        """点首领卡片进详情页；点不中就再点，返回是否**确实**进了详情页。
 
-        # 1) 进详情页：图标框中心 + 偏移
+        ⚠️ 退出战斗后画面可能还在过渡（同一 ROI 两秒内从 `213` 读成 `2/3`），
+        这一击会被吞掉 —— 所以必须"确认 + 重试"，不能点完就算。
+        """
         roi = BOSS_ICON_ROIS[boss]
         cx = roi[0] + roi[2] // 2 + ICON_TO_ITEM_OFFSET[0]
         cy = roi[1] + roi[3] // 2 + ICON_TO_ITEM_OFFSET[1]
-        self._tap(context, cx, cy)
-        time.sleep(PAGE_WAIT)
+        for attempt in range(1, DETAIL_ENTRY_RETRY + 1):
+            self._tap(context, cx, cy)
+            if self._wait_boss_detail(context, DETAIL_ENTRY_WAIT):
+                return True
+            log(f"点 ({cx},{cy}) 后没进详情页（第 {attempt}/{DETAIL_ENTRY_RETRY} 次）")
+        return False
+
+    def _wait_boss_detail(self, context: Context, timeout: float) -> bool:
+        """轮询等待详情页出现（判据见 `_in_boss_detail`）。"""
+        deadline = time.time() + timeout
+        while True:
+            if self._in_boss_detail(context):
+                return True
+            if time.time() >= deadline:
+                return False
+            time.sleep(1.0)
+
+    def _fight(self, context: Context, assignment: Assignment) -> str:
+        """打一场；返回 FIGHT_OK / FIGHT_UNUSABLE / FIGHT_FAILED（见常量注释）。"""
+        boss, team = assignment.boss_slot, assignment.team
+        log(f"开战：槽位{boss} ← {team.name}")
+
+        # 1) 进详情页：图标框中心 + 偏移（点不中就重试；仍失败算"没打起来"）
+        if not self._open_boss_detail(context, boss):
+            log(f"未能进入槽位{boss}的详情页 —— 本场没打起来")
+            return FIGHT_FAILED
 
         # 2) 打开「选择预设」并选中目标队伍
         if not self._pick_preset(context, team.name):
             log(f"未能选中预设 {team.name}")
             self._close_preset_popup_if_present(context)
             self._back_to_boss_list(context)
-            return False
+            return FIGHT_FAILED
 
         # 2.5) 选完预设先判一次：英雄栏有「无法使用」= 该预设今日已参与 → 跳过
         if self._hero_unusable(context, self._screencap(context)):
             log(f"预设 {team.name} 里有英雄「无法使用」（今日已参与）—— 跳过该队伍")
             self._back_to_boss_list(context)
-            return False
+            return FIGHT_UNUSABLE
 
         # 3) 开打：入场（PRACTICE_MODE=True 时走演习）
         if PRACTICE_MODE:
             self._tap(context, *TAP_DETAIL_PRACTICE)
         else:
             if not self._enter_enabled(context):
-                log("「入场」不可点（队伍英雄今日已用），跳过")
-                return False
+                log("读不到可点的「入场」—— 本场没打起来（先不拉黑队伍）")
+                self._back_to_boss_list(context)
+                return FIGHT_FAILED
             self._tap(context, *TAP_DETAIL_ENTER)
         time.sleep(PAGE_WAIT)
 
@@ -854,12 +984,15 @@ class GuildRaidOrchestrator(CustomAction):
         if outcome == BATTLE_NOTICE:
             log("本场打不了：英雄当日已参与（「注意」弹窗已关）—— 跳过该队伍")
             self._back_to_boss_list(context)
-            return False
+            return FIGHT_UNUSABLE
         if outcome != BATTLE_READY:
             log("未找到「自动战斗」，可能没进战斗，仍尝试等结算")
 
         # 5) 等结算 → 退出
-        return self._wait_and_exit(context)
+        if self._wait_and_exit(context):
+            return FIGHT_OK
+        log("等待结算超时 —— 本场结果不明（次数可能已消耗）")
+        return FIGHT_FAILED
 
     def _pick_preset(self, context: Context, team_name: str) -> bool:
         """点 ≡ 打开弹窗，OCR 找到目标预设行并点击（必要时上滑）。"""
@@ -978,12 +1111,28 @@ class GuildRaidOrchestrator(CustomAction):
         time.sleep(TAP_WAIT)
 
     def _read_battles(self, context: Context, image: np.ndarray | None) -> int:
-        """读 `剩余挑战次数 x/3`；读不到返回 -1。"""
+        """读 `剩余挑战次数 x/3` 的 x；**按 `x/y` 严格解析，解析不出返回 -1**。
+
+        ⚠️ 曾用 `re.findall(r"\\d+")` 取第一个数字串 → 把 `2/3` 的误读版本 `213`
+        当成 213 次，后续决策全乱（见 `../踩坑记录.md` §1.9）。
+        """
         if image is None:
             return -1
-        text = self._ocr_text(context, NODE_ENTRIES, image)
-        for token in re.findall(r"\d+", text or ""):
-            return int(token)
+        match = _BATTLES_RE.search(self._ocr_text(context, NODE_ENTRIES, image))
+        return int(match.group(1)) if match else -1
+
+    def _read_battles_with_retry(
+        self, context: Context, retries: int = BATTLES_READ_RETRY
+    ) -> int:
+        """读剩余次数；读不到就重截重识别（画面可能在过渡），仍失败返回 -1。"""
+        for attempt in range(1, retries + 1):
+            value = self._read_battles(context, self._screencap(context))
+            if value >= 0:
+                return value
+            if attempt < retries:
+                log(f"剩余挑战次数识别失败，重试（第 {attempt}/{retries} 次）")
+                time.sleep(BATTLES_READ_INTERVAL)
+        log(f"剩余挑战次数连续 {retries} 次识别失败")
         return -1
 
     # ---- OCR 封装 ----
@@ -1044,11 +1193,10 @@ def run_raid(
     """
     flow = GuildRaidOrchestrator()
     try:
-        flow._run(context, param_json, nav)
+        return flow._run(context, param_json, nav)
     except Exception as exc:  # noqa: BLE001 - 顶层兜底，避免中断框架
         log(f"异常终止：{exc!r}")
         import traceback
 
         log(traceback.format_exc())
         return False
-    return True

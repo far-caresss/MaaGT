@@ -1,65 +1,11 @@
 {
-    "$__mpe_config_新建Pipeline5": {
-        "$__mpe_code": {
-            "prefix": "",
-            "coordinateMode": "absolute-v1",
-            "lastSyncTime": 1785684387283,
-            "isModifiedExternally": false,
-            "filePath": "D:\\wh\\jiaoben\\MaaGT\\MaaGT\\assets\\resource\\pipeline\\receive.json",
-            "savedViewport": {
-                "x": -175,
-                "y": -42,
-                "zoom": 0.65
-            },
-            "filename": "新建Pipeline7",
-            "version": "v1.6.1"
-        }
-    },
-    "$__mpe_external_Return_新建Pipeline5": {
-        "$__mpe_code": {
-            "position": {
-                "x": 332,
-                "y": 59
-            }
-        }
-    },
-    "$__mpe_external_点击空白处关闭弹窗_新建Pipeline5": {
-        "$__mpe_code": {
-            "position": {
-                "x": 1612,
-                "y": 233
-            }
-        }
-    },
-    "$__mpe_external_确认_新建Pipeline5": {
-        "$__mpe_code": {
-            "position": {
-                "x": 1932,
-                "y": 268
-            }
-        }
-    },
-    "$__mpe_external_返回_新建Pipeline5": {
-        "$__mpe_code": {
-            "position": {
-                "x": 1612,
-                "y": 93
-            }
-        }
-    },
     "Receive": {
         "post_delay": 500,
         "timeout": 60000,
         "next": [
             "[JumpBack]Return",
             "任务"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 12,
-                "y": 12
-            }
-        }
+        ]
     },
     "一键领取": {
         "recognition": {
@@ -78,12 +24,6 @@
         },
         "action": {
             "type": "Click"
-        },
-        "$__mpe_code": {
-            "position": {
-                "x": 2572,
-                "y": 444
-            }
         }
     },
     "任务": {
@@ -106,13 +46,7 @@
         },
         "next": [
             "日常"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 332,
-                "y": 199
-            }
-        }
+        ]
     },
     "全部领取": {
         "recognition": {
@@ -135,13 +69,7 @@
         "next": [
             "[JumpBack]点击空白处关闭弹窗",
             "已获得"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 972,
-                "y": 224
-            }
-        }
+        ]
     },
     "已获得": {
         "recognition": {
@@ -165,13 +93,7 @@
             "[JumpBack]点击空白处关闭弹窗",
             "[JumpBack]返回",
             "活动"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1292,
-                "y": 124
-            }
-        }
+        ]
     },
     "收起": {
         "recognition": {
@@ -201,13 +123,7 @@
         },
         "next": [
             "确认活动目标"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1932,
-                "y": 408
-            }
-        }
+        ]
     },
     "日常": {
         "recognition": {
@@ -231,13 +147,7 @@
             "全部领取",
             "[JumpBack]返回",
             "活动"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 652,
-                "y": 224
-            }
-        }
+        ]
     },
     "活动": {
         "recognition": {
@@ -268,13 +178,7 @@
         "next": [
             "[JumpBack]确认",
             "收起"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1612,
-                "y": 373
-            }
-        }
+        ]
     },
     "确认活动目标": {
         "recognition": {
@@ -290,12 +194,6 @@
         },
         "next": [
             "一键领取"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 2252,
-                "y": 443
-            }
-        }
+        ]
     }
 }

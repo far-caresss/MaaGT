@@ -1,41 +1,11 @@
 {
-    "$__mpe_config_新建Pipeline7": {
-        "$__mpe_code": {
-            "prefix": "",
-            "lastSyncTime": 1785684429374,
-            "isModifiedExternally": false,
-            "filePath": "D:\\wh\\jiaoben\\MaaGT\\MaaGT\\assets\\resource\\pipeline\\friend.json",
-            "coordinateMode": "absolute-v1",
-            "savedViewport": {
-                "x": 291,
-                "y": 276,
-                "zoom": 0.75
-            },
-            "filename": "新建Pipeline7",
-            "version": "v1.6.1"
-        }
-    },
-    "$__mpe_external_Return_新建Pipeline7": {
-        "$__mpe_code": {
-            "position": {
-                "x": 332,
-                "y": 12
-            }
-        }
-    },
     "Friend": {
         "post_delay": 500,
         "timeout": 60000,
         "next": [
             "[JumpBack]Return",
             "菜单1"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 12,
-                "y": 123
-            }
-        }
+        ]
     },
     "好友": {
         "recognition": {
@@ -57,13 +27,7 @@
         },
         "next": [
             "送礼"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 652,
-                "y": 166
-            }
-        }
+        ]
     },
     "菜单1": {
         "recognition": {
@@ -93,13 +57,7 @@
         },
         "next": [
             "好友"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 332,
-                "y": 152
-            }
-        }
+        ]
     },
     "送礼": {
         "recognition": {
@@ -118,12 +76,6 @@
         },
         "action": {
             "type": "Click"
-        },
-        "$__mpe_code": {
-            "position": {
-                "x": 972,
-                "y": 166
-            }
         }
     }
 }

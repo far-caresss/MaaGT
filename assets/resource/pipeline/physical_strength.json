@@ -1,36 +1,4 @@
 {
-    "$__mpe_config_新建Pipeline2": {
-        "$__mpe_code": {
-            "prefix": "",
-            "lastSyncTime": 1785684429372,
-            "isModifiedExternally": false,
-            "filePath": "D:\\wh\\jiaoben\\MaaGT\\MaaGT\\assets\\resource\\pipeline\\physical_strength.json",
-            "coordinateMode": "absolute-v1",
-            "savedViewport": {
-                "x": -855,
-                "y": -132,
-                "zoom": 0.99
-            },
-            "filename": "新建Pipeline2",
-            "version": "v1.6.1"
-        }
-    },
-    "$__mpe_external_Return_新建Pipeline2": {
-        "$__mpe_code": {
-            "position": {
-                "x": 1052,
-                "y": 2862
-            }
-        }
-    },
-    "$__mpe_external_确认_新建Pipeline2": {
-        "$__mpe_code": {
-            "position": {
-                "x": 2032,
-                "y": 72
-            }
-        }
-    },
     "Awakening": {
         "post_wait_freezes": 300,
         "timeout": 60000,
@@ -38,13 +6,7 @@
             "[JumpBack]Return",
             "[JumpBack]游玩",
             "裂痕觉醒"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 732,
-                "y": 2102
-            }
-        }
+        ]
     },
     "Thetis": {
         "post_wait_freezes": 300,
@@ -53,22 +15,9 @@
             "[JumpBack]Return",
             "[JumpBack]游玩",
             "忒提斯"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 732,
-                "y": 1790
-            }
-        }
+        ]
     },
-    "体力达标判断失败": {
-        "$__mpe_code": {
-            "position": {
-                "x": 2032,
-                "y": 4454
-            }
-        }
-    },
+    "体力达标判断失败": {},
     "体力达标判断对": {
         "recognition": {
             "type": "Custom",
@@ -81,13 +30,7 @@
         },
         "next": [
             "扫荡"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1712,
-                "y": 3776
-            }
-        }
+        ]
     },
     "体力达标判断错": {
         "recognition": {
@@ -101,13 +44,7 @@
         },
         "next": [
             "体力达标判断失败"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1712,
-                "y": 4405
-            }
-        }
+        ]
     },
     "光开花": {
         "recognition": {
@@ -140,13 +77,7 @@
         "timeout": 60000,
         "next": [
             "开花次数"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1052,
-                "y": 5025
-            }
-        }
+        ]
     },
     "光进化": {
         "recognition": {
@@ -180,13 +111,7 @@
         "next": [
             "焕发未完成",
             "焕发已完成"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1372,
-                "y": 2468
-            }
-        }
+        ]
     },
     "判断体力": {
         "max_hit": 1,
@@ -203,12 +128,6 @@
                     "^\\d*$"
                 ],
                 "only_rec": true
-            }
-        },
-        "$__mpe_code": {
-            "position": {
-                "x": 1712,
-                "y": 4064
             }
         }
     },
@@ -243,13 +162,7 @@
         "timeout": 60000,
         "next": [
             "开花次数"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1052,
-                "y": 3444
-            }
-        }
+        ]
     },
     "土进化": {
         "recognition": {
@@ -283,13 +196,7 @@
         "next": [
             "焕发未完成",
             "焕发已完成"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1372,
-                "y": 3794
-            }
-        }
+        ]
     },
     "开花次数": {
         "recognition": {
@@ -315,13 +222,7 @@
             "[JumpBack]判断体力",
             "体力达标判断错",
             "体力达标判断对"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1372,
-                "y": 4236
-            }
-        }
+        ]
     },
     "忒提斯": {
         "recognition": {
@@ -347,13 +248,7 @@
             "[JumpBack]确认",
             "忒提斯已完成",
             "忒提斯扫荡"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1372,
-                "y": 12
-            }
-        }
+        ]
     },
     "忒提斯扫荡": {
         "recognition": {
@@ -383,13 +278,7 @@
         },
         "next": [
             "扫荡"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1712,
-                "y": 734
-            }
-        }
+        ]
     },
     "扫荡": {
         "recognition": {
@@ -408,12 +297,6 @@
         },
         "action": {
             "type": "Click"
-        },
-        "$__mpe_code": {
-            "position": {
-                "x": 2032,
-                "y": 783
-            }
         }
     },
     "暗开花": {
@@ -447,13 +330,7 @@
         "timeout": 60000,
         "next": [
             "开花次数"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1052,
-                "y": 3886
-            }
-        }
+        ]
     },
     "暗进化": {
         "recognition": {
@@ -487,13 +364,7 @@
         "next": [
             "焕发未完成",
             "焕发已完成"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1372,
-                "y": 1584
-            }
-        }
+        ]
     },
     "水开花": {
         "recognition": {
@@ -526,13 +397,7 @@
         "timeout": 60000,
         "next": [
             "开花次数"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1052,
-                "y": 3002
-            }
-        }
+        ]
     },
     "水进化": {
         "recognition": {
@@ -566,13 +431,7 @@
         "next": [
             "焕发未完成",
             "焕发已完成"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1372,
-                "y": 3352
-            }
-        }
+        ]
     },
     "游玩": {
         "recognition": {
@@ -598,12 +457,6 @@
                     35,
                     44
                 ]
-            }
-        },
-        "$__mpe_code": {
-            "position": {
-                "x": 1052,
-                "y": 2137
             }
         }
     },
@@ -638,13 +491,7 @@
         "timeout": 60000,
         "next": [
             "开花次数"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1052,
-                "y": 2420
-            }
-        }
+        ]
     },
     "火进化": {
         "recognition": {
@@ -678,13 +525,7 @@
         "next": [
             "焕发未完成",
             "焕发已完成"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1372,
-                "y": 2910
-            }
-        }
+        ]
     },
     "焕发已完成": {
         "recognition": {
@@ -699,12 +540,6 @@
                 "expected": [
                     "消耗"
                 ]
-            }
-        },
-        "$__mpe_code": {
-            "position": {
-                "x": 1712,
-                "y": 2343
             }
         }
     },
@@ -725,13 +560,7 @@
         },
         "next": [
             "扫荡"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1712,
-                "y": 2055
-            }
-        }
+        ]
     },
     "红碎": {
         "recognition": {
@@ -764,13 +593,7 @@
         "timeout": 60000,
         "next": [
             "开花次数"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1052,
-                "y": 1695
-            }
-        }
+        ]
     },
     "虚开花": {
         "recognition": {
@@ -803,13 +626,7 @@
         "timeout": 60000,
         "next": [
             "开花次数"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1052,
-                "y": 4328
-            }
-        }
+        ]
     },
     "虚进化": {
         "recognition": {
@@ -843,13 +660,7 @@
         "next": [
             "焕发未完成",
             "焕发已完成"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1372,
-                "y": 1142
-            }
-        }
+        ]
     },
     "裂痕": {
         "recognition": {
@@ -868,12 +679,6 @@
         },
         "action": {
             "type": "Click"
-        },
-        "$__mpe_code": {
-            "position": {
-                "x": 1052,
-                "y": 4770
-            }
         }
     },
     "裂痕觉醒": {
@@ -896,13 +701,7 @@
         },
         "next": [
             "资源觉醒"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1052,
-                "y": 410
-            }
-        }
+        ]
     },
     "觉醒": {
         "recognition": {
@@ -934,13 +733,7 @@
         "next": [
             "[JumpBack]确认",
             "扫荡"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1712,
-                "y": 356
-            }
-        }
+        ]
     },
     "觉醒已完成": {
         "recognition": {
@@ -955,12 +748,6 @@
                 "expected": [
                     "挑战券兑换"
                 ]
-            }
-        },
-        "$__mpe_code": {
-            "position": {
-                "x": 1712,
-                "y": 1052
             }
         }
     },
@@ -985,13 +772,7 @@
         "next": [
             "觉醒已完成",
             "觉醒"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1372,
-                "y": 410
-            }
-        }
+        ]
     },
     "进入开花石": {
         "recognition": {
@@ -1012,13 +793,7 @@
             "type": "Click"
         },
         "post_delay": 500,
-        "timeout": 60000,
-        "$__mpe_code": {
-            "position": {
-                "x": 12,
-                "y": 12
-            }
-        }
+        "timeout": 60000
     },
     "进入游玩": {
         "post_wait_freezes": 300,
@@ -1026,13 +801,7 @@
         "next": [
             "[JumpBack]Return",
             "游玩"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 732,
-                "y": 2414
-            }
-        }
+        ]
     },
     "进入裂痕": {
         "post_wait_freezes": 300,
@@ -1041,13 +810,7 @@
             "[JumpBack]Return",
             "[JumpBack]游玩",
             "裂痕"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 732,
-                "y": 2794
-            }
-        }
+        ]
     },
     "进入资源": {
         "recognition": {
@@ -1068,13 +831,7 @@
             "type": "Click"
         },
         "post_delay": 500,
-        "timeout": 60000,
-        "$__mpe_code": {
-            "position": {
-                "x": 252,
-                "y": 12
-            }
-        }
+        "timeout": 60000
     },
     "进入进化石": {
         "recognition": {
@@ -1095,13 +852,7 @@
             "type": "Click"
         },
         "post_delay": 500,
-        "timeout": 60000,
-        "$__mpe_code": {
-            "position": {
-                "x": 492,
-                "y": 12
-            }
-        }
+        "timeout": 60000
     },
     "道具": {
         "recognition": {
@@ -1135,13 +886,7 @@
         "next": [
             "焕发未完成",
             "焕发已完成"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1372,
-                "y": 2026
-            }
-        }
+        ]
     },
     "金币": {
         "recognition": {
@@ -1175,13 +920,7 @@
         "next": [
             "焕发未完成",
             "焕发已完成"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1372,
-                "y": 700
-            }
-        }
+        ]
     },
     "忒提斯已完成": {
         "recognition": {
@@ -1196,12 +935,6 @@
                 "expected": [
                     "0/3"
                 ]
-            }
-        },
-        "$__mpe_code": {
-            "position": {
-                "x": 1712,
-                "y": 103
             }
         }
     }

@@ -1,28 +1,5 @@
 {
-    "1": {
-        "$__mpe_code": {
-            "position": {
-                "x": 2572,
-                "y": 518
-            }
-        }
-    },
-    "$__mpe_config_新建Pipeline4": {
-        "$__mpe_code": {
-            "prefix": "",
-            "lastSyncTime": 1785684387263,
-            "isModifiedExternally": false,
-            "filePath": "D:\\wh\\jiaoben\\MaaGT\\MaaGT\\assets\\resource\\pipeline\\startup.json",
-            "coordinateMode": "absolute-v1",
-            "savedViewport": {
-                "x": -960,
-                "y": -352,
-                "zoom": 0.66
-            },
-            "filename": "新建Pipeline7",
-            "version": "v1.6.1"
-        }
-    },
+    "1": {},
     "Return": {
         "max_hit": 1,
         "post_wait_freezes": 500,
@@ -34,13 +11,7 @@
             "[JumpBack]返回",
             "[JumpBack]人物窗返回",
             "停止"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 2572,
-                "y": 1297
-            }
-        }
+        ]
     },
     "StartGT": {
         "max_hit": 1,
@@ -55,26 +26,14 @@
             "[JumpBack]热更新",
             "[JumpBack]开始游戏",
             "旅店"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1292,
-                "y": 630
-            }
-        }
+        ]
     },
     "StartUp": {
         "post_delay": 500,
         "timeout": 60000,
         "next": [
             "[JumpBack]StartGT"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 972,
-                "y": 646
-            }
-        }
+        ]
     },
     "停止": {
         "recognition": {
@@ -84,12 +43,6 @@
                     "识别颜色",
                     "识别菜单"
                 ]
-            }
-        },
-        "$__mpe_code": {
-            "position": {
-                "x": 2892,
-                "y": 862
             }
         }
     },
@@ -104,12 +57,6 @@
                     1,
                     1
                 ]
-            }
-        },
-        "$__mpe_code": {
-            "position": {
-                "x": 2572,
-                "y": 1018
             }
         }
     },
@@ -138,12 +85,6 @@
                     14
                 ]
             }
-        },
-        "$__mpe_code": {
-            "position": {
-                "x": 2252,
-                "y": 334
-            }
         }
     },
     "判断确认": {
@@ -159,12 +100,6 @@
                 "expected": [
                     "确认"
                 ]
-            }
-        },
-        "$__mpe_code": {
-            "position": {
-                "x": 12,
-                "y": 12
             }
         }
     },
@@ -193,12 +128,6 @@
                     ]
                 ]
             }
-        },
-        "$__mpe_code": {
-            "position": {
-                "x": 492,
-                "y": 12
-            }
         }
     },
     "取消": {
@@ -218,12 +147,6 @@
         },
         "action": {
             "type": "Click"
-        },
-        "$__mpe_code": {
-            "position": {
-                "x": 2892,
-                "y": 1083
-            }
         }
     },
     "开始游戏": {
@@ -260,13 +183,7 @@
             "[JumpBack]弹窗",
             "[JumpBack]签到",
             "旅店"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1612,
-                "y": 561
-            }
-        }
+        ]
     },
     "弹窗": {
         "recognition": {
@@ -300,13 +217,7 @@
             "[JumpBack]月卡",
             "[JumpBack]点击空白处关闭弹窗",
             "1"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 2252,
-                "y": 617
-            }
-        }
+        ]
     },
     "旅店": {
         "recognition": {
@@ -331,13 +242,7 @@
         },
         "next": [
             "公主宝箱"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 2252,
-                "y": 1015
-            }
-        }
+        ]
     },
     "月卡": {
         "recognition": {
@@ -367,13 +272,7 @@
         },
         "next": [
             "点击空白处关闭弹窗"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 2572,
-                "y": 648
-            }
-        }
+        ]
     },
     "点击空白处关闭弹窗": {
         "recognition": {
@@ -393,12 +292,6 @@
                     0,
                     0
                 ]
-            }
-        },
-        "$__mpe_code": {
-            "position": {
-                "x": 2892,
-                "y": 569
             }
         }
     },
@@ -426,13 +319,7 @@
             "[JumpBack]签到",
             "[JumpBack]弹窗",
             "旅店"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1932,
-                "y": 455
-            }
-        }
+        ]
     },
     "确认": {
         "recognition": {
@@ -445,12 +332,6 @@
         },
         "action": {
             "type": "Click"
-        },
-        "$__mpe_code": {
-            "position": {
-                "x": 2892,
-                "y": 1685
-            }
         }
     },
     "签到": {
@@ -485,13 +366,7 @@
         "next": [
             "[JumpBack]点击空白处关闭弹窗",
             "1"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 2252,
-                "y": 12
-            }
-        }
+        ]
     },
     "识别菜单": {
         "recognition": {
@@ -506,12 +381,6 @@
                 "expected": [
                     "菜单"
                 ]
-            }
-        },
-        "$__mpe_code": {
-            "position": {
-                "x": 252,
-                "y": 12
             }
         }
     },
@@ -539,12 +408,6 @@
                         56
                     ]
                 ]
-            }
-        },
-        "$__mpe_code": {
-            "position": {
-                "x": 732,
-                "y": 12
             }
         }
     },
@@ -583,12 +446,6 @@
                     24
                 ]
             }
-        },
-        "$__mpe_code": {
-            "position": {
-                "x": 2892,
-                "y": 1338
-            }
         }
     },
     "人物窗返回": {
@@ -615,12 +472,6 @@
                     33,
                     65
                 ]
-            }
-        },
-        "$__mpe_code": {
-            "position": {
-                "x": 2892,
-                "y": 1908
             }
         }
     }

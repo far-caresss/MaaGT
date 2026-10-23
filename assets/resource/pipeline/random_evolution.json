@@ -1,41 +1,11 @@
 {
-    "$__mpe_config_新建Pipeline8": {
-        "$__mpe_code": {
-            "prefix": "",
-            "coordinateMode": "absolute-v1",
-            "lastSyncTime": 1785684387282,
-            "isModifiedExternally": false,
-            "filePath": "D:\\wh\\jiaoben\\MaaGT\\MaaGT\\assets\\resource\\pipeline\\random_evolution.json",
-            "savedViewport": {
-                "x": 149,
-                "y": 305,
-                "zoom": 0.75
-            },
-            "filename": "新建Pipeline7",
-            "version": "v1.6.1"
-        }
-    },
-    "$__mpe_external_Return_新建Pipeline8": {
-        "$__mpe_code": {
-            "position": {
-                "x": 332,
-                "y": 12
-            }
-        }
-    },
     "RandomEvolution": {
         "post_delay": 500,
         "timeout": 60000,
         "next": [
             "[JumpBack]Return",
             "菜单2"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 12,
-                "y": 123
-            }
-        }
+        ]
     },
     "强化": {
         "recognition": {
@@ -57,13 +27,7 @@
         },
         "next": [
             "装备进化"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 652,
-                "y": 166
-            }
-        }
+        ]
     },
     "给钱": {
         "recognition": {
@@ -101,12 +65,6 @@
                     24
                 ]
             }
-        },
-        "$__mpe_code": {
-            "position": {
-                "x": 1932,
-                "y": 136
-            }
         }
     },
     "自动随机进化": {
@@ -129,13 +87,7 @@
         },
         "next": [
             "给钱"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1612,
-                "y": 166
-            }
-        }
+        ]
     },
     "菜单2": {
         "recognition": {
@@ -165,13 +117,7 @@
         },
         "next": [
             "强化"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 332,
-                "y": 152
-            }
-        }
+        ]
     },
     "装备进化": {
         "recognition": {
@@ -193,13 +139,7 @@
         },
         "next": [
             "随机进化"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 972,
-                "y": 166
-            }
-        }
+        ]
     },
     "随机进化": {
         "recognition": {
@@ -221,12 +161,6 @@
         },
         "next": [
             "自动随机进化"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1292,
-                "y": 166
-            }
-        }
+        ]
     }
 }

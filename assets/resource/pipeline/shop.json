@@ -1,49 +1,11 @@
 {
-    "$__mpe_config_新建Pipeline3": {
-        "$__mpe_code": {
-            "prefix": "",
-            "lastSyncTime": 1785684387270,
-            "isModifiedExternally": false,
-            "filePath": "D:\\wh\\jiaoben\\MaaGT\\MaaGT\\assets\\resource\\pipeline\\shop.json",
-            "coordinateMode": "absolute-v1",
-            "savedViewport": {
-                "x": -299,
-                "y": 158,
-                "zoom": 0.86
-            },
-            "filename": "新建Pipeline7",
-            "version": "v1.6.1"
-        }
-    },
-    "$__mpe_external_Return_新建Pipeline3": {
-        "$__mpe_code": {
-            "position": {
-                "x": 419,
-                "y": 33
-            }
-        }
-    },
-    "$__mpe_external_点击空白处关闭弹窗_新建Pipeline3": {
-        "$__mpe_code": {
-            "position": {
-                "x": 1612,
-                "y": 457
-            }
-        }
-    },
     "Shop": {
         "post_delay": 500,
         "timeout": 60000,
         "next": [
             "[JumpBack]Return",
             "商店"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 12,
-                "y": 12
-            }
-        }
+        ]
     },
     "买金币": {
         "recognition": {
@@ -65,13 +27,7 @@
         },
         "next": [
             "确认.免费"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 972,
-                "y": 271
-            }
-        }
+        ]
     },
     "商店": {
         "recognition": {
@@ -101,13 +57,7 @@
         },
         "next": [
             "资源"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 332,
-                "y": 188
-            }
-        }
+        ]
     },
     "强化锤": {
         "recognition": {
@@ -129,13 +79,7 @@
         },
         "next": [
             "确认.强化锤"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1932,
-                "y": 202
-            }
-        }
+        ]
     },
     "确认.免费": {
         "recognition": {
@@ -158,13 +102,7 @@
         "next": [
             "[JumpBack]点击空白处关闭弹窗",
             "装备"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1292,
-                "y": 271
-            }
-        }
+        ]
     },
     "确认.强化锤": {
         "recognition": {
@@ -191,12 +129,6 @@
                     25
                 ]
             }
-        },
-        "$__mpe_code": {
-            "position": {
-                "x": 2252,
-                "y": 188
-            }
         }
     },
     "装备": {
@@ -221,13 +153,7 @@
         "next": [
             "强化锤",
             "过渡2"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1612,
-                "y": 202
-            }
-        }
+        ]
     },
     "资源": {
         "recognition": {
@@ -250,20 +176,7 @@
         "next": [
             "买金币",
             "装备"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 652,
-                "y": 202
-            }
-        }
+        ]
     },
-    "过渡2": {
-        "$__mpe_code": {
-            "position": {
-                "x": 1935,
-                "y": 417
-            }
-        }
-    }
+    "过渡2": {}
 }

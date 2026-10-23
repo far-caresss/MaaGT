@@ -1,20 +1,4 @@
 {
-    "$__mpe_config_公会协力讨伐": {
-        "$__mpe_code": {
-            "prefix": "",
-            "lastSyncTime": 0,
-            "isModifiedExternally": false,
-            "filePath": "D:\\wh\\jiaoben\\MaaGT\\MaaGT\\assets\\resource\\pipeline\\guild_raid.json",
-            "coordinateMode": "absolute-v1",
-            "savedViewport": {
-                "x": 0,
-                "y": 0,
-                "zoom": 1.0
-            },
-            "filename": "公会协力讨伐",
-            "version": "v1.6.1"
-        }
-    },
     "GuildRaid": {
         "action": {
             "type": "Custom",

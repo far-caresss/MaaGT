@@ -23,53 +23,7 @@
             "[JumpBack]刷新",
             "[JumpBack]44战斗",
             "44打完"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 652,
-                "y": 421
-            }
-        }
-    },
-    "$__mpe_config_新建Pipeline10": {
-        "$__mpe_code": {
-            "prefix": "",
-            "coordinateMode": "absolute-v1",
-            "lastSyncTime": 1785684387284,
-            "isModifiedExternally": false,
-            "filePath": "D:\\wh\\jiaoben\\MaaGT\\MaaGT\\assets\\resource\\pipeline\\pvp_4v4.json",
-            "savedViewport": {
-                "x": 69,
-                "y": 34,
-                "zoom": 0.75
-            },
-            "filename": "新建Pipeline7",
-            "version": "v1.6.1"
-        }
-    },
-    "$__mpe_external_Return_新建Pipeline10": {
-        "$__mpe_code": {
-            "position": {
-                "x": 332,
-                "y": 277
-            }
-        }
-    },
-    "$__mpe_external_点击空白处关闭弹窗_新建Pipeline10": {
-        "$__mpe_code": {
-            "position": {
-                "x": 1657,
-                "y": 372
-            }
-        }
-    },
-    "$__mpe_external_确认_新建Pipeline10": {
-        "$__mpe_code": {
-            "position": {
-                "x": 1612,
-                "y": 694
-            }
-        }
+        ]
     },
     "44战斗": {
         "desc": "比较三个对手的队伍数值，挑最低的一个「开始战斗」（见 agent/PvpWeakestPicker.py）",
@@ -87,13 +41,7 @@
         },
         "next": [
             "开始战斗"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 972,
-                "y": 830
-            }
-        }
+        ]
     },
     "对手数值格": {
         "desc": "空壳 OCR 节点：PvpWeakestPicker 用 pipeline_override 改它的 roi 去读对手数值，请勿删除",
@@ -107,12 +55,6 @@
                     24
                 ],
                 "only_rec": true
-            }
-        },
-        "$__mpe_code": {
-            "position": {
-                "x": 972,
-                "y": 1010
             }
         }
     },
@@ -130,12 +72,6 @@
                     "StarUp/44打完.png"
                 ]
             }
-        },
-        "$__mpe_code": {
-            "position": {
-                "x": 972,
-                "y": 12
-            }
         }
     },
     "Pvp_4v4": {
@@ -144,13 +80,7 @@
         "next": [
             "[JumpBack]Return",
             "游玩2"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 12,
-                "y": 230
-            }
-        }
+        ]
     },
     "刷新": {
         "recognition": {
@@ -169,12 +99,6 @@
         },
         "action": {
             "type": "Click"
-        },
-        "$__mpe_code": {
-            "position": {
-                "x": 972,
-                "y": 312
-            }
         }
     },
     "开始战斗": {
@@ -201,13 +125,7 @@
         "next": [
             "[JumpBack]确认",
             "点击空白处关闭弹窗"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 1292,
-                "y": 547
-            }
-        }
+        ]
     },
     "游玩2": {
         "recognition": {
@@ -237,13 +155,7 @@
         },
         "next": [
             "44"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 332,
-                "y": 417
-            }
-        }
+        ]
     },
     "点x": {
         "recognition": {
@@ -269,12 +181,6 @@
                     6,
                     10
                 ]
-            }
-        },
-        "$__mpe_code": {
-            "position": {
-                "x": 972,
-                "y": 547
             }
         }
     }

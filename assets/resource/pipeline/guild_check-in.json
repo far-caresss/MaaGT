@@ -1,41 +1,11 @@
 {
-    "$__mpe_config_新建Pipeline6": {
-        "$__mpe_code": {
-            "prefix": "",
-            "lastSyncTime": 1785684387275,
-            "isModifiedExternally": false,
-            "filePath": "D:\\wh\\jiaoben\\MaaGT\\MaaGT\\assets\\resource\\pipeline\\guild_check-in.json",
-            "coordinateMode": "absolute-v1",
-            "savedViewport": {
-                "x": 457,
-                "y": 299,
-                "zoom": 1.14
-            },
-            "filename": "新建Pipeline7",
-            "version": "v1.6.1"
-        }
-    },
-    "$__mpe_external_Return_新建Pipeline6": {
-        "$__mpe_code": {
-            "position": {
-                "x": 332,
-                "y": 48
-            }
-        }
-    },
     "Guild_check-in": {
         "post_delay": 500,
         "timeout": 60000,
         "next": [
             "[JumpBack]Return",
             "公会"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 12,
-                "y": 12
-            }
-        }
+        ]
     },
     "公会": {
         "recognition": {
@@ -65,13 +35,7 @@
         },
         "next": [
             "公会签到"
-        ],
-        "$__mpe_code": {
-            "position": {
-                "x": 332,
-                "y": 188
-            }
-        }
+        ]
     },
     "公会签到": {
         "recognition": {
@@ -90,12 +54,6 @@
         },
         "action": {
             "type": "Click"
-        },
-        "$__mpe_code": {
-            "position": {
-                "x": 652,
-                "y": 202
-            }
         }
     }
 }

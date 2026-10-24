@@ -9,6 +9,7 @@ import my_action
 import my_reco
 import ExpressionRecognition
 import PvpWeakestPicker
+import page_guard  # noqa: F401 - 注册 NavTo / AssertOnPage / 等 7 个图内原语
 
 
 def main():

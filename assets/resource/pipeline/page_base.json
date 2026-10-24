@@ -1,0 +1,53 @@
+{
+    "PageMain": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "识别颜色",
+                    "识别菜单"
+                ]
+            }
+        }
+    },
+    "PageGuild": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "公会签到"
+                ]
+            }
+        }
+    },
+    "PageTask": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "全部领取"
+                ]
+            }
+        }
+    },
+    "PageFriend": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "送礼"
+                ]
+            }
+        }
+    },
+    "DlgReward": {
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "点击空白处关闭弹窗"
+                ]
+            }
+        }
+    }
+}

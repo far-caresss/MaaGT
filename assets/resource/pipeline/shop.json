@@ -178,5 +178,43 @@
             "装备"
         ]
     },
-    "过渡2": {}
+    "过渡2": {},
+    "ShopNav": {
+        "desc": "批 4 · 商店（新链）。旧入口 `Shop` 保留不动。`NavTo(PageShop)` 一跳直达（NAV_TABLE 有 PageMain →(商店)→ PageShop），断言通过后交给旧内部节点 `资源`（它点左侧「资源」页签），后面仍是旧的 买金币 / 装备 / 强化锤 链。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "NavTo",
+                "custom_action_param": {
+                    "target": "PageShop"
+                }
+            }
+        },
+        "next": [
+            "ShopAssert"
+        ]
+    },
+    "ShopAssert": {
+        "desc": "点「资源」页签之前先确认在商店页（架构 §3.2 第 5 条）。`PageShop` = 标题 `商店` + 左侧首个页签 `订阅卡`，两个信号都是本页独有。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "AssertOnPage",
+                "custom_action_param": {
+                    "page": "PageShop"
+                }
+            }
+        },
+        "next": [
+            "资源"
+        ]
+    }
 }

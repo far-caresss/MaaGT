@@ -10,6 +10,7 @@ import my_reco
 import ExpressionRecognition
 import PvpWeakestPicker
 import page_guard  # noqa: F401 - 注册 NavTo / AssertOnPage / 等 7 个图内原语
+import pvp44  # noqa: F401 - 注册 Pvp44Rounds（44 多场循环）
 
 
 def main():

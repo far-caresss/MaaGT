@@ -27,6 +27,8 @@ from maa.context import Context
 from maa.custom_action import CustomAction
 from maa.define import OCRResult
 
+from page_guard import PAGE_RAID_DETAIL
+
 # ======================================================================
 # 常量
 # ======================================================================
@@ -61,11 +63,16 @@ TAP_MAIN_GUILD = (238, 675)        # 兜底坐标（优先用 OCR 定位）
 TAP_GUILD_PLAY_CARD = (1100, 185)  # 兜底坐标（优先用 OCR 定位）
 
 #: 首领列表页 4 个槽位的属性图标 ROI (x, y, w, h)
+#: 2026-10-31 重新标定（`_tmp/calib_attr.py`：网格搜索 + "字形必须完整落在窗内"）。
+#: 旧值里 **槽位1（光）窗口整体低了约 24px**，字形被 tight-crop 切掉一半 → IoU 0.218 < 0.55
+#: → 光被记成"未知"，而 `choose_plan` 会**整槽排除** element=None 的首领，
+#: 于是虚队（虚克光）永远等不到那个槽位，只能去打中性/被克的槽位。
+#: 实测：槽位1 旧→None(0.218)，新→light(0.700)。
 BOSS_ICON_ROIS: tuple[tuple[int, int, int, int], ...] = (
-    (34, 376, 52, 52),
-    (460, 229, 52, 52),
-    (913, 256, 52, 52),
-    (374, 526, 52, 52),
+    (31, 364, 56, 56),   # 暗  IoU 0.718
+    (457, 205, 56, 56),  # 光  IoU 0.700
+    (917, 249, 56, 56),  # 水  IoU 0.852
+    (374, 532, 56, 56),  # 火  IoU 0.762
 )
 #: 图标外接框中心 → 首领详情页点击点的偏移
 ICON_TO_ITEM_OFFSET = (120, 54)
@@ -106,6 +113,9 @@ GLYPH_MIN_IOU = 0.55
 _ASSETS_DIR = Path(__file__).resolve().parent.parent            # .../assets
 TEMPLATE_DIR = _ASSETS_DIR / "resource" / "image" / "Guild" / "Element"
 LOG_FILE = _ASSETS_DIR.parent / "debug" / "guild_raid.log"
+#: 「今天已经打过的 BOSS 槽位」持久化文件。`_run` 里的 `done_bosses` 只是**单次运行内**的变量，
+#: 一天跑两次“公会活动”任务就会各自从头分配 → 同一个 BOSS 被打两次（2026-11-14 用户发现）。
+RAID_STATE_FILE = _ASSETS_DIR.parent / "debug" / "raid_done.json"
 CONFIG_CANDIDATES: tuple[Path, ...] = (
     _ASSETS_DIR / "config" / "teams.json",
     Path.cwd() / "config" / "teams.json",
@@ -375,6 +385,41 @@ def parse_teams_param(entries: Sequence[object]) -> list[Team]:
     return teams
 
 
+def load_done_bosses() -> set[int]:
+    """当日已打完的 BOSS 槽位（跨任务运行保留，日期变了自动清空）。
+
+    为什么要落盘：`_run` 里的 `done_bosses` 活不过一次任务。用户 2026-11-14 实测：
+    早上跑一次打了「九尾狐佳岚 + 创始入艾芙芭」，下午再跑一次又打了「创始入艾芙芭」——
+    因为第二次进来集合是空的，重新分配又选中了它。
+    """
+    try:
+        data = json.loads(RAID_STATE_FILE.read_text(encoding="utf-8"))
+    except Exception:  # noqa: BLE001 - 文件不存在 / 内容坏了都当"今天还没打"
+        return set()
+    if str(data.get("date")) != time.strftime("%Y%m%d"):
+        return set()
+    out: set[int] = set()
+    for s in data.get("done_slots") or []:
+        try:
+            out.add(int(s))
+        except (TypeError, ValueError):
+            continue
+    return out
+
+
+def save_done_bosses(slots: set[int]) -> None:
+    """写回「今天打过的槽位」。写失败只记日志，绝不影响本场流程。"""
+    try:
+        RAID_STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
+        RAID_STATE_FILE.write_text(
+            json.dumps({"date": time.strftime("%Y%m%d"), "done_slots": sorted(slots)},
+                       ensure_ascii=False),
+            encoding="utf-8",
+        )
+    except Exception as exc:  # noqa: BLE001
+        log(f"保存「今日已打 BOSS」失败（本场不受影响）：{exc!r}")
+
+
 def load_glyph_templates() -> dict[str, np.ndarray]:
     """加载 6 张属性字形模板（24x24 二值）。"""
     templates: dict[str, np.ndarray] = {}
@@ -414,31 +459,52 @@ def _glyph_mask(image: np.ndarray, roi: tuple[int, int, int, int]) -> np.ndarray
     return np.asarray(resized) > 127
 
 
+def rank_glyphs(
+    mask: np.ndarray | None, templates: dict[str, np.ndarray]
+) -> list[tuple[str, float]]:
+    """按 IoU 从高到低排 `[(属性, IoU), ...]`（认不出时用来打"最高分是谁"）。"""
+    if mask is None or not templates:
+        return []
+    scored: list[tuple[str, float]] = []
+    for name, tpl in templates.items():
+        inter = np.logical_and(mask, tpl).sum()
+        union = np.logical_or(mask, tpl).sum()
+        scored.append((name, float(inter / union) if union else 0.0))
+    scored.sort(key=lambda kv: kv[1], reverse=True)
+    return scored
+
+
 def classify_glyph(
     mask: np.ndarray | None, templates: dict[str, np.ndarray]
 ) -> tuple[str | None, float]:
     """返回 (属性, IoU)；低于阈值返回 (None, 最高分)。"""
-    if mask is None or not templates:
+    scored = rank_glyphs(mask, templates)
+    if not scored:
         return None, 0.0
-    best_name, best_iou = None, 0.0
-    for name, tpl in templates.items():
-        inter = np.logical_and(mask, tpl).sum()
-        union = np.logical_or(mask, tpl).sum()
-        iou = float(inter / union) if union else 0.0
-        if iou > best_iou:
-            best_name, best_iou = name, iou
-    if best_iou < GLYPH_MIN_IOU:
-        return None, best_iou
-    return best_name, best_iou
+    name, iou = scored[0]
+    if iou < GLYPH_MIN_IOU:
+        return None, iou
+    return name, iou
 
 
 def detect_bosses(image: np.ndarray, templates: dict[str, np.ndarray]) -> list[Boss]:
-    """识别 4 个首领槽位的属性。"""
+    """识别 4 个首领槽位的属性。
+
+    ⚠️ 认不出（IoU < `GLYPH_MIN_IOU`）的槽位 `element=None`，`choose_plan` 会**整槽排除**它——
+    所以"某支队伍闲着不打"时先看这一行日志：可能不是分配逻辑，而是图标没认出来。
+    """
     bosses: list[Boss] = []
     for slot, roi in enumerate(BOSS_ICON_ROIS):
-        element, iou = classify_glyph(_glyph_mask(image, roi), templates)
+        mask = _glyph_mask(image, roi)
+        element, iou = classify_glyph(mask, templates)
         bosses.append(Boss(slot=slot, element=element))
-        log(f"槽位{slot} 属性={ELEMENT_CN.get(element or '', '未知')} IoU={iou:.3f}")
+        if element is None:
+            top = rank_glyphs(mask, templates)[:2]
+            hint = "、".join(f"{ELEMENT_CN.get(n, n)}={s:.3f}" for n, s in top) or "无掩膜"
+            log(f"槽位{slot} 属性=未知 IoU={iou:.3f}（最高 {hint}）"
+                f" → 该槽位不参与分配")
+        else:
+            log(f"槽位{slot} 属性={ELEMENT_CN.get(element, '未知')} IoU={iou:.3f}")
     return bosses
 
 
@@ -611,7 +677,9 @@ class GuildRaidOrchestrator(CustomAction):
         attempts: set[str] = set()                      # 游戏确认"今日不可用"的队伍
         failed_pairs: dict[tuple[int, str], int] = {}     # (槽位, 队伍) 的失败次数
         banned_pairs: set[tuple[int, str]] = set()        # 反复打不起来的组合（不拉黑队伍）
-        done_bosses: set[int] = set()
+        done_bosses: set[int] = load_done_bosses()
+        if done_bosses:
+            log(f"今天已经打过的槽位（跨运行记忆）：{sorted(done_bosses)}")
 
         while True:
             now = self._read_battles_with_retry(context)
@@ -649,6 +717,7 @@ class GuildRaidOrchestrator(CustomAction):
 
             if status == FIGHT_OK:
                 done_bosses.add(assignment.boss_slot)
+                save_done_bosses(done_bosses)
                 battles -= 1
                 failed_pairs.pop(pair, None)
             elif status == FIGHT_UNUSABLE:
@@ -792,6 +861,12 @@ class GuildRaidOrchestrator(CustomAction):
         image = self._screencap(context)
         if image is None:
             return False
+        # 批 5：先用登记在 `PAGE_NODES` 的强判据（首领信息 + 演习 + 入场 三信号）。
+        # 三信号同时成立才算"确认在详情页"，比"任一按钮"严；但**失败仍退回下面两级判据**，
+        # 因为 OCR 抖动时三信号同时成立的概率低于单信号，硬卡会让本场白跳过。
+        strong = context.run_recognition(PAGE_RAID_DETAIL, image)
+        if strong is not None and strong.hit:
+            return True
         for node in (NODE_PRACTICE_BUTTON, NODE_ENTER_BUTTON):
             if self._ocr_hit(context, node, image) is not None:
                 return True

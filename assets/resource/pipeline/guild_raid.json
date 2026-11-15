@@ -59,22 +59,6 @@
             }
         }
     },
-    "RaidResultPanel": {
-        "recognition": {
-            "type": "OCR",
-            "param": {
-                "roi": [
-                    400,
-                    15,
-                    480,
-                    45
-                ],
-                "expected": [
-                    "本场结果"
-                ]
-            }
-        }
-    },
     "RaidResultExit": {
         "recognition": {
             "type": "OCR",

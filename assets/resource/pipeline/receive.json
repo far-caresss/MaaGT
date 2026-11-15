@@ -91,8 +91,7 @@
         },
         "next": [
             "[JumpBack]点击空白处关闭弹窗",
-            "[JumpBack]返回",
-            "活动"
+            "ReceiveActNav"
         ]
     },
     "收起": {
@@ -150,14 +149,15 @@
         ]
     },
     "活动": {
+        "desc": "**主界面右侧竖排**的「活动」入口。2026-11-01 真机实测：主界面命中框 `(1201,205,32,16)`，点框中心 `(1217,213)` → 「资源加载中」→ 活动页（标题 `活动` + 左栏 `进行中的活动`，`PageActivity`/`收起` 都命中）。ROI 从原来的 `[1155,109,124,171]` 收到按钮附近：那条竖条贯通 y=109..280，把**任务页右上的「活动」tab** `(1159,109,31,9)` 也框进去了，停在任务页时会误命中并只切出一个外传列表（详见 `ReceiveActNav` 的 desc）。**不配 `target`**：原来的 `(1201,148,30,36)` → 中心 `(1216,166)`，比真实按钮中心高约 47px，落在按钮上边缘外。",
         "recognition": {
             "type": "OCR",
             "param": {
                 "roi": [
-                    1155,
-                    109,
-                    124,
-                    171
+                    1180,
+                    185,
+                    100,
+                    60
                 ],
                 "expected": [
                     "活动"
@@ -165,15 +165,7 @@
             }
         },
         "action": {
-            "type": "Click",
-            "param": {
-                "target": [
-                    1201,
-                    148,
-                    30,
-                    36
-                ]
-            }
+            "type": "Click"
         },
         "next": [
             "[JumpBack]确认",
@@ -194,6 +186,80 @@
         },
         "next": [
             "一键领取"
+        ]
+    },
+    "ReceiveNav": {
+        "desc": "批 4 · 领取（新链）。旧入口 Receive 保留不动。NavTo(PageMain) 回主界面 → 点任务横幅左边的三条横进「任务指南」(BtnTaskGuide) → 断言 → 旧 日常 节点 → 旧的 全部领取 / 已获得 / 活动 / 一键领取 链。**注意**：日常在「任务指南」页，不在任务页（真机 2026-11-01 确认）。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "NavTo",
+                "custom_action_param": {
+                    "target": "PageMain"
+                }
+            }
+        },
+        "next": [
+            "BtnTaskGuide"
+        ]
+    },
+    "ReceiveDailyCategory": {
+        "desc": "在任务指南页左侧分类里点「日常」（旧 `日常` 节点是纯 OCR + 固定落点，这里用 `And{日常}` 包一层，落点取识别框中心 ≈`(232,99)`）。**认不到就整链失败**——这是用户要求的硬约束：不许在别的分类页上点 `全部领取`。",
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "日常"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "ReceiveDailyCheck"
+        ],
+        "post_delay": 2000
+    },
+    "ReceiveDailyCheck": {
+        "desc": "用**节点自身判定**（框架会给 20s 重试窗口）代替 AssertOnPage：AssertOnPage 是自定义动作，识别走的是快超时，页面刚切完时两次 OCR 来不及，真机上连挂三次；改成节点判定后「认不到就不往下走」，安全性一样（不会在别的分类页点全部领取）。",
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "PageDailyTask"
+                ]
+            }
+        },
+        "action": {
+            "type": "DoNothing",
+            "param": {}
+        },
+        "next": [
+            "全部领取"
+        ]
+    },
+    "ReceiveActNav": {
+        "desc": "日常领完后**回主界面**再走旧 活动 链。⚠️ 2026-11-01 真机纠正：原来写 `PageTask`（任务页），结果 `活动` 那个节点主界面右边缘 `(1201,205,32,16)` 是「活动」入口，而任务页右上也有个「活动」tab `(1159,109,31,9)`，旧 ROI 是贯通 y=109..280 的竖条 → 两页都命中。停在任务页时点中的是 tab，页面只切到外传列表，紧接着 `收起`（判「左上标题=活动」）接不上，末尾冒出空名节点 completed=False。必须 NavTo(PageMain)：从主界面点右侧入口才真进活动页。NavTo(PageMain) 不点任何消耗。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "NavTo",
+                "custom_action_param": {
+                    "target": "PageMain"
+                }
+            }
+        },
+        "next": [
+            "活动"
         ]
     }
 }

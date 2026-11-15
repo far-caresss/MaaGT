@@ -32,16 +32,15 @@ from maa.define import OCRResult
 import guild_arena
 import guild_dig
 import guild_raid
+from page_guard import PAGE_GUILD, nav_to
 from guild_raid import (
     LOBBY_KEYWORD,
     NODE_ENTRIES,
     NODE_LOBBY_PANEL,
-    NODE_GUILD_ENTRY,
     NODE_PLAY_CARD,
     NODE_POPUP_HINT,
     PAGE_WAIT,
     TAP_BLANK_TO_CLOSE,
-    TAP_MAIN_GUILD,
     TAP_WAIT,
     _to_box,
     detect_bosses,
@@ -72,13 +71,8 @@ ARENA_PAIR = ("首领", "信息")
 #: 挖掘判据关键词：右侧面板的「挖掘进度 / 十字镐」
 DIG_KEYWORDS = ("挖掘进度", "十字镐")
 
-#: 既有导航节点（`pipeline/startup.json`）——**复用，不自造**
-NODE_RETURN_TASK = "Return"      # 关弹窗 + 逐层返回；末尾「停止」= 主界面判定
-NODE_MAIN_COLOR = "识别颜色"      # 主界面（旅店）背景色
-NODE_MAIN_MENU = "识别菜单"       # 主界面左下「菜单」
-
-#: 导航步数上限：每步都打日志，超了就安全退出（不盲点、不死循环）
-MAX_NAV_STEPS = 8
+#: 点开活动卡后的重试次数（页面切场景时给两次机会；再多就是判据缺口，见 `_reach_activity`）
+CARD_RETRY = 2
 
 #: `剩余挑战次数 x/3` —— 讨伐判据之一
 _BATTLES_RE = re.compile(r"(\d+)\s*/\s*(\d+)")
@@ -224,50 +218,43 @@ class GuildActivityRouter(CustomAction):
         return None
 
     def _reach_activity(self, context: Context, glyphs: dict) -> str | None:
-        """从**任意页面**识别出当前活动；必要时收拾页面回到主界面再走。
+        """从**任意页面**识别出当前活动；必要时用导航层回到公会大厅再点卡。
 
-        每步先认窗口、再决定动作：
+        2026-11-01（批 5）把"回主界面 / 进公会"这段从手写逻辑换成 `page_guard.nav_to`：
+        原来靠 `Return` + `识别颜色/识别菜单` + 底栏固定坐标，现在只依赖 `Page*` 判据，
+        走错页时会自己"回锚点 → 重进"，而不是盲点坐标。步骤：
 
-        | 当前窗口 | 动作 |
-        |---|---|
-        | 某个活动页 | 直接用（`_identify`） |
-        | 公会大厅 | 读最上方活动卡 → 点卡 → 再识别 |
-        | 主界面（旅店） | 点底栏「公会」 |
-        | 其它（弹窗 / 子页） | 跑既有 `Return` 节点：关弹窗 + 逐层返回 |
+        1. 已经在某个活动页 → 直接识别返回（0 步，最常见）
+        2. `nav_to(PageGuild)`：收弹窗 → 回主界面 → 点底栏「公会」
+        3. 在公会大厅点**最上方活动卡** → 再识别（当前周期的活动总在最上面）
 
-        ⚠️ 认不出窗口时**不盲点固定坐标**，只跑 `Return`；步数用尽就安全退出。
+        ⚠️ 任何一步失败都**安全退出**，不盲点固定坐标。
         """
-        for step in range(1, MAX_NAV_STEPS + 1):
+        activity = self._identify(context, glyphs)
+        if activity:
+            return activity
+
+        if not nav_to(context, PAGE_GUILD):
+            log("导航到公会大厅失败 —— 安全退出（不盲点）")
+            return None
+
+        activity = self._open_top_card(context, glyphs)
+        if activity:
+            return activity
+
+        # 点卡本身是有判据的动作（已确认在公会大厅 + 卡上有中文），点完仍认不出
+        # = **探针缺判据**，不是"页面还没加载完"。再给两次机会（可能在切场景），之后放弃。
+        # ⚠️ 2026-11-06 真机踩到：原来写的是"识别失败 → nav 回大厅重来"，遇到挖掘页判据失效
+        # （`DigPanel` ROI 把「挖掘进度」切掉一半）时，变成「点卡→进活动页→识别失败→退回大厅」
+        # 的 8 轮空转，每轮还各带一次 3s 的 `_wait_for(PageMain)` 超时。
+        for attempt in range(1, CARD_RETRY + 1):
+            time.sleep(PAGE_WAIT * 2)
             activity = self._identify(context, glyphs)
             if activity:
                 return activity
+            log(f"第 {attempt}/{CARD_RETRY} 次重试仍未识别出活动")
 
-            image = self._screencap(context)
-            if image is None:
-                log("截图失败，终止导航")
-                return None
-
-            if self._in_guild_lobby(context, image):
-                log(f"[{step}/{MAX_NAV_STEPS}] 当前窗口 = 公会大厅")
-                activity = self._open_top_card(context, glyphs)
-                if activity:
-                    return activity
-                log(f"[{step}/{MAX_NAV_STEPS}] 大厅里点开最上方活动卡后仍认不出，稍后重试")
-                time.sleep(PAGE_WAIT)
-                continue
-
-            if self._in_main_screen(context, image):
-                log(f"[{step}/{MAX_NAV_STEPS}] 当前窗口 = 主界面（旅店），点底栏「公会」")
-                self._tap_guild_entry(context)
-                time.sleep(PAGE_WAIT)
-                self._close_popup_if_present(context)
-                continue
-
-            log(f"[{step}/{MAX_NAV_STEPS}] 当前窗口 = 认不出（弹窗 / 子页），用 Return 收拾页面")
-            self._run_return(context)
-            time.sleep(PAGE_WAIT)
-
-        log(f"⚠️ 导航 {MAX_NAV_STEPS} 步仍未抵达公会活动，安全退出")
+        log("⚠️ 已点开最上方活动卡，但识别不出当前活动（探针缺判据）→ 安全退出")
         return None
 
     def _open_top_card(self, context: Context, glyphs: dict) -> str | None:
@@ -289,26 +276,6 @@ class GuildActivityRouter(CustomAction):
         time.sleep(PAGE_WAIT * 1.5)
         self._close_popup_if_present(context)
         return self._identify(context, glyphs)
-
-    def _run_return(self, context: Context) -> bool:
-        """跑既有 `Return` 节点：关弹窗（取消/确认/点击空白处/人物窗）+ 逐层返回。
-
-        它在 `startup.json` 里写了 `max_hit: 1`（同一次任务里只跑一遍），
-        所以循环调用前必须先清命中计数，否则第二次会被框架直接跳过。
-        """
-        context.clear_hit_count(NODE_RETURN_TASK)
-        detail = context.run_task(NODE_RETURN_TASK)
-        ok = bool(detail and detail.status.succeeded)
-        log(f"Return 完成：succeeded={ok}")
-        return ok
-
-    def _in_main_screen(self, context: Context, image: np.ndarray | None) -> bool:
-        """主界面（旅店）判据：复用既有节点 `识别颜色` + `识别菜单`（= `停止` 节点同款）。"""
-        if image is None:
-            return False
-        color = context.run_recognition(NODE_MAIN_COLOR, image)
-        menu = context.run_recognition(NODE_MAIN_MENU, image)
-        return bool(color and color.hit and menu and menu.hit)
 
     def _dispatch(self, context: Context, activity: str, param: str) -> bool:
         """把控制权交给对应流程。"""
@@ -379,22 +346,6 @@ class GuildActivityRouter(CustomAction):
             if _CJK_RE.search(text or ""):
                 return box, text
         return None
-
-    def _tap_guild_entry(self, context: Context) -> bool:
-        """点底栏「公会」；OCR 不到就退回固定坐标。"""
-        image = self._screencap(context)
-        if image is not None:
-            detail = context.run_recognition(NODE_GUILD_ENTRY, image)
-            if detail is not None and detail.hit:
-                box = _to_box(detail.box)
-                if box is not None:
-                    x, y, w, h = box
-                    log(f"{NODE_GUILD_ENTRY} -> ({x + w // 2},{y + h // 2})")
-                    self._tap(context, x + w // 2, y + h // 2)
-                    return True
-        log(f"{NODE_GUILD_ENTRY} 未识别，退回固定坐标 {TAP_MAIN_GUILD}")
-        self._tap(context, *TAP_MAIN_GUILD)
-        return False
 
     def _close_popup_if_present(self, context: Context) -> bool:
         """入口/结算可能弹领奖页：点空白处关闭。"""

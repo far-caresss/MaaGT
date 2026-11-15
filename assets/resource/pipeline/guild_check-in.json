@@ -55,5 +55,73 @@
         "action": {
             "type": "Click"
         }
+    },
+    "GuildCheckIn": {
+        "desc": "批 1 · 公会签到（新链，零消耗试点）。旧链 `Guild_check-in` 保留不动。链路：`NavTo(PageGuild)` → 断言确实在公会页 → 点「签到」。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "NavTo",
+                "custom_action_param": {
+                    "target": "PageGuild"
+                }
+            }
+        },
+        "next": [
+            "GuildCheckInAssert"
+        ]
+    },
+    "GuildCheckInAssert": {
+        "desc": "**点之前先确认自己在公会页**（架构 §3.2 第 5 条：任何点下去之前必须能回答『我现在确实在 X 页』）。`AssertOnPage` 不满足就什么都不点、直接失败返回，避免 NavTo 走偏后在别的页面上点到同名文字。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "AssertOnPage",
+                "custom_action_param": {
+                    "page": "PageGuild"
+                }
+            }
+        },
+        "next": [
+            "GuildCheckInTap",
+            "GuildCheckInDone"
+        ]
+    },
+    "GuildCheckInTap": {
+        "desc": "点签到按钮。识别 = `BtnGuildCheckIn`（OCR `签到`）**+ `ValGuildCheckInReady`（黄色可点态）**。2026-11-15 加后者：原来只判 OCR，按钮变灰照样命中 → **点空却报成功**（N10c）。现在灰着就不命中，由上游 `GuildCheckInAssert.next` 的兜底跳到 `GuildCheckInDone`，任务正常结束而不是假装签到成功。`Click` **不带 target** → 点识别框中心。签到 0 消耗，不需要闸门。",
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "BtnGuildCheckIn",
+                    "ValGuildCheckInReady"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "GuildCheckInDone"
+        ]
+    },
+    "GuildCheckInDone": {
+        "desc": "收尾：什么都不做，正常结束本任务（签到没有需要收集的弹窗）。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "DoNothing"
+        },
+        "next": []
     }
 }

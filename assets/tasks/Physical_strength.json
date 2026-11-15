@@ -2,22 +2,22 @@
     "task": [
         {
             "name": "觉醒石",
-            "entry": "Awakening"
+            "entry": "RiftAwakenNav"
         },
         {
             "name": "忒提斯",
-            "entry": "Thetis"
+            "entry": "RiftThetisNav"
         },
         {
             "name": "焕发",
-            "entry": "进入裂痕",
+            "entry": "RiftBloomNav",
             "option": [
                 "焕发"
             ]
         },
         {
             "name": "非焕发",
-            "entry": "进入裂痕",
+            "entry": "RiftBloomNav",
             "option": [
                 "非焕发"
             ]

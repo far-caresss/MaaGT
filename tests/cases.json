@@ -1,0 +1,396 @@
+{
+    "comment": "判据回归矩阵：每帧列出**必须命中**（expect）和**允许同时命中**（allow）的节点；其余所有 Page*/Dlg*/Btn*/Val* 都必须**不命中**。帧全部来自真机 1280x720 截图。",
+    "frames": [
+        {
+            "file": "main.png",
+            "desc": "主界面（村庄），无弹窗、无菜单。注意 `BtnTaskGuide` 必然命中：它的判据是 `And{PageMain}` + target `(410,618)`，**没有任何按钮自身信号**（等于「在主界面就点三条横」）→ 见 §八 待清清单",
+            "expect": [
+                "PageMain"
+            ],
+            "allow": [
+                "BtnTaskGuide",
+                "BtnMainChest"
+            ]
+        },
+        {
+            "file": "main_chest.png",
+            "desc": "主界面 + **可领宝箱**（2026-11-14 真机帧）：`BtnMainChest` 的模板 `Main/宝箱.png` 就是从这帧裁的，源框 `(657,238,42,45)`。宝箱领完就消失，所以判据只能用 `TemplateMatch`（位置也不固定），绝不能写死坐标。这帧保证它稳定命中，同时其它主界面帧（如 `main.png`、`back_main*`）必须不命中 —— 一旦某帧也有宝箱，矩阵会红，需要给那帧加 `allow`",
+            "expect": [
+                "PageMain",
+                "BtnMainChest"
+            ],
+            "allow": [
+                "BtnTaskGuide"
+            ]
+        },
+        {
+            "file": "menu.png",
+            "desc": "菜单覆盖层打开：底栏仍在，所以 PageMain 同时成立（N5）；`BtnTaskGuide` 同理（它只判 `PageMain`）",
+            "expect": [
+                "PageMenuOpen"
+            ],
+            "allow": [
+                "PageMain",
+                "BtnTaskGuide",
+                "BtnMainChest"
+            ]
+        },
+        {
+            "file": "guild.png",
+            "desc": "公会页；`BtnGuildCheckIn` 是左下角签到入口判据（批 1 抽出的纯判据）",
+            "expect": [
+                "PageGuild",
+                "BtnGuildCheckIn"
+            ],
+            "allow": []
+        },
+        {
+            "file": "guild_raid_list.png",
+            "desc": "公会讨伐「首领列表」页（2026-11-01 真机帧）：4 张 BOSS 卡 + 右下 `剩余挑战次数 3/3`。判据故意**不看**标题「协力讨伐 β测试版」——那串带当期活动名/版本号，每期都会变",
+            "expect": [
+                "PageRaidList"
+            ],
+            "allow": []
+        },
+        {
+            "file": "guild_raid_detail.png",
+            "desc": "公会讨伐「首领详情」页（2026-11-01 真机帧）：右栏 `首领信息` + 底部 `演习` / `入场 (3/3)`。**进详情页不消耗次数**，只有点 `入场` 才扣，所以这页的判据也是「拒绝盲点入场」的前置条件",
+            "expect": [
+                "PageRaidDetail"
+            ],
+            "allow": []
+        },
+        {
+            "file": "guild_dig.png",
+            "desc": "公会「陨石挖掘计划」页（2026-11-06 真机帧，3.55.0）：右栏 `挖掘进度 0/8` + `每日十字镐任务`。这个帧是修 `DigPanel` ROI 的直接依据——旧 ROI 左边界 `930` 把「挖掘进度」切成了「进度」",
+            "expect": [
+                "PageDig"
+            ],
+            "allow": []
+        },
+        {
+            "file": "guild_arena.png",
+            "desc": "公会「地牢王国竞技场」页（2026-11-06 真机帧，赛季已结束）：右栏 `今日竞技场状况` + 底部 `兑换所`。关键负样本作用：证明 `PageArena` 不会被挖掘页的「键领取」骗到（旧 `ArenaTabs`/`ArenaStatus` 没绑关键词，两页都命中）",
+            "expect": [
+                "PageArena"
+            ],
+            "allow": []
+        },
+        {
+            "file": "task.png",
+            "desc": "任务页（页标题 任务 + tab 全部任务）",
+            "expect": [
+                "PageTask"
+            ],
+            "allow": []
+        },
+        {
+            "file": "activity.png",
+            "desc": "活动页（开心宾果乐内嵌）",
+            "expect": [
+                "PageActivity"
+            ],
+            "allow": []
+        },
+        {
+            "file": "pvp44.png",
+            "desc": "44 面板（3/5 次数），带剩余次数读数",
+            "expect": [
+                "PagePvp44",
+                "ValPvpTickets"
+            ],
+            "allow": []
+        },
+        {
+            "file": "guide_pvp_tab.png",
+            "desc": "游玩指南的 PvP tab —— 曾经判成 PageUnknown（§6.13）",
+            "expect": [
+                "PageGuide"
+            ],
+            "allow": []
+        },
+        {
+            "file": "dlg_formation.png",
+            "desc": "44「站位设置」弹窗（面板在背后）",
+            "expect": [
+                "DlgPvpFormation",
+                "BtnPvpFormationFight"
+            ],
+            "allow": [
+                "PagePvp44",
+                "ValPvpTickets"
+            ]
+        },
+        {
+            "file": "dlg_result_win.png",
+            "desc": "44 结果面板（胜利）—— 关键负样本：Pvp44ResultLoss 在这儿必须**不命中**",
+            "expect": [
+                "DlgPvpResult",
+                "BtnPvpResultConfirm",
+                "Pvp44ResultWin"
+            ],
+            "allow": []
+        },
+        {
+            "file": "dlg_result_loss.png",
+            "desc": "44 结果面板（战败，2026-10-31 由 DumpFrame 自动留档拿到的唯一正样本）",
+            "expect": [
+                "DlgPvpResult",
+                "BtnPvpResultConfirm",
+                "Pvp44ResultLoss"
+            ],
+            "allow": [
+                "Pvp44ResultWin"
+            ]
+        },
+        {
+            "file": "dlg_reward.png",
+            "desc": "44 战后奖励弹窗（面板在背后，次数 2/5）",
+            "expect": [
+                "DlgReward",
+                "ValPvpTickets"
+            ],
+            "allow": [
+                "PagePvp44"
+            ]
+        },
+        {
+            "file": "dlg_notice.png",
+            "desc": "「提示」类确认弹窗（退出游戏?）。`BtnTipSentConfirm` / `BtnGameUpdateConfirm` 也会命中：它们的 ROI 都罩住右下那颗「确认」，**任何带确认的弹窗都命中** —— 按钮判据本就不可能互斥，安全全靠 `Dlg*` 判据（`DIALOG_CLOSERS` 按命中的 `Dlg*` 决定点哪个按钮）",
+            "expect": [
+                "DlgNotice",
+                "BtnNoticeCancel"
+            ],
+            "allow": [
+                "PageMain",
+                "BtnTipSentConfirm",
+                "BtnGameUpdateConfirm"
+            ]
+        },
+        {
+            "file": "shop.png",
+            "desc": "商店页（卡马逊）",
+            "expect": [
+                "PageShop"
+            ],
+            "allow": []
+        },
+        {
+            "file": "forge.png",
+            "desc": "强化页（打铁铺）；`PageForgeEvolve` 是左侧「装备进化」菜单项判据",
+            "expect": [
+                "PageForge",
+                "PageForgeEvolve"
+            ],
+            "allow": []
+        },
+        {
+            "file": "dlg_tip_sent.png",
+            "desc": "好友页点完「一键领取/送礼」弹出的提示（2026-11-01 真机帧）：**只有「确认」没有「取消」**，所以 `DlgNotice` 收不掉它 —— 单列 `DlgTipSent`（判据绑死正文「已经向所有好友发送礼物」）。`PageFriend`/`BtnFriendGift` 在弹窗背后仍然可见，所以同时成立",
+            "expect": [
+                "DlgTipSent",
+                "PageFriend",
+                "BtnFriendGift"
+            ],
+            "allow": [
+                "BtnTipSentConfirm",
+                "BtnNoticeAck"
+            ]
+        },
+        {
+            "file": "dlg_activity_low.png",
+            "desc": "任务指南页弹「提示 · 今日活跃度不足，请先完成日常任务。」（2026-11-01 用户反馈帧，原始 942x530 已等比放大到 1280x720）：与 `DlgTipSent` 同一模板（**只有「确认」没有「取消」**），所以 `DlgNotice` 收不掉 → 单列 `DlgNoticeAck`。用户说明：**完整跑完所有任务流不会弹**，只有只跑部分环节做测试、活跃度不够时才弹。顺带这也是 `PageDailyTask` 的第一个正样本帧（右下 `全部领取` 是灰的，OCR 仍认得出）。注意 `BtnNoticeAck` 与 `BtnTipSentConfirm` 是**同一模板位置**的纯 OCR「确认」，两者在这帧必然都命中，所以互相进 `allow`：**判别只能靠 `Dlg*` 判据**（`DIALOG_CLOSERS` 就是这么用的），任何 `next` 都不得直接链到这两个 `Btn*`。",
+            "expect": [
+                "DlgNoticeAck",
+                "PageDailyTask"
+            ],
+            "allow": [
+                "BtnNoticeAck",
+                "BtnTipSentConfirm"
+            ]
+        },
+        {
+            "file": "friend.png",
+            "desc": "好友页；`BtnFriendGift` 是右下角「领取」判据（批 2 抽出的纯判据）",
+            "expect": [
+                "PageFriend",
+                "BtnFriendGift"
+            ],
+            "allow": []
+        },
+        {
+            "file": "rift.png",
+            "desc": "游玩指南 · 裂痕 tab（PageGuideRift 优先于 PageGuide，所以两个都成立）",
+            "expect": [
+                "PageGuideRift",
+                "PageGuide"
+            ],
+            "allow": []
+        },
+        {
+            "file": "webview.png",
+            "desc": "网页活动页（全屏 webview）—— 按设计**不建判据**，必须全部不命中，由 NavTo 的箭头兜底处理",
+            "expect": [],
+            "allow": []
+        },
+        {
+            "file": "dlg_ad_layer.png",
+            "desc": "开屏礼包广告轮播（2026-11-01 真机帧「公主的特别礼物 阶段2」）：底部「2周内不再提示」是 `DlgAdLayer` 的判据来源；`BtnAdClose` 是它的点击包装（And{DlgAdLayer}），所以同时成立；`DlgStartup` 是批 2 的合并判据（Or{DlgAdLayer, DlgAnnouncement}），广告层成立时它必然成立",
+            "expect": [
+                "DlgAdLayer",
+                "DlgStartup"
+            ],
+            "allow": [
+                "BtnAdClose"
+            ]
+        },
+        {
+            "file": "dlg_ad_layer_paid.png",
+            "desc": "**含真实货币的**礼包广告层「公主的特别礼物 阶段3」右下 `¥518`（2026-11-06 真机帧，游戏更新到 3.55.0 后首次进村）。意义：证明 `DlgAdLayer` 的判据**只认底部「2周内不再提示」那一行**、不会被 ¥ 干扰；而 `BtnAdClose` 点的是右上 ✕ `(1240,41)`，不是黄按钮 —— 含 ¥ 的层照样能安全关掉",
+            "expect": [
+                "DlgAdLayer",
+                "DlgStartup"
+            ],
+            "allow": [
+                "BtnAdClose"
+            ]
+        },
+        {
+            "file": "dlg_reward_checkin.png",
+            "desc": "签到格领取后的「获得第12天签到奖励」奖励窗（2026-11-06 真机帧）：底部 `点击空白处关闭弹窗` `(568,659,142,18)` —— `DlgReward` 的第二种形态（第一种是好友页的「获得礼物」）",
+            "expect": [
+                "DlgReward"
+            ],
+            "allow": []
+        },
+        {
+            "file": "dlg_buy_equip.png",
+            "desc": "商店购买确认弹窗的**第二种布局**：「超凡专属装备宝箱」（限购 1/1）—— 它**没有 `持有量` / 可购买 那一行**，也没有数量滑块，正文直接是商品名 + 描述 + `是否购买?`。2026-11-14 真机踩到：判据原来绑了「持有量」，买这个商品时判据不成立，误判成「弹窗没出现」→ 弹窗留着把后面 3 格全堵死。所以判据改成 `是否购买` + `取消`",
+            "expect": [
+                "DlgBuyQuantity"
+            ],
+            "allow": [
+                "BtnBuyConfirm",
+                "BtnBuyCancel",
+                "BtnNoticeCancel"
+            ]
+        },
+        {
+            "file": "guild_signin_ready.png",
+            "desc": "公会大厅 · 「签到」按钮**可点态**（用户 2026-11-15 帧，942x530 等比放大）：主色实测 `#FFCD11`。这条帧的作用是给 `ValGuildCheckInReady` 一个正样本 —— 与 `guild.png`（已签到、灰 `#727986`）配成一对，证明「亮/灰」能区分开，从而解决 N10c「点空却报成功」",
+            "expect": [
+                "PageGuild",
+                "BtnGuildCheckIn",
+                "ValGuildCheckInReady"
+            ],
+            "allow": []
+        },
+        {
+            "file": "friend_gift_ready.png",
+            "desc": "好友页 · 「一键领取/送礼」**可点态**（用户 2026-11-15 帧）：主色实测 `#FFCF17`（比另两个按钮略偏橙）。正样本给 `ValFriendGiftReady`；与 `friend.png`（已领完、灰 `#78797B`）配对",
+            "expect": [
+                "PageFriend",
+                "BtnFriendGift",
+                "ValFriendGiftReady"
+            ],
+            "allow": []
+        },
+        {
+            "file": "activity_claim_ready.png",
+            "desc": "活动目标页 · 右下「一键领取」**可点态**（用户 2026-11-15 帧）：主色 `#FFCD11`。正样本给 `ValActivityClaimReady`；与 `dlg_activity_low.png`（灰 `#717589`）配对。⚠️ 这帧上 `PageActivity` 不命中 —— 它是「活动目标」子面板，不是活动主页",
+            "expect": [
+                "ValActivityClaimReady"
+            ],
+            "allow": []
+        },
+        {
+            "file": "dlg_auto_battle_bloom.png",
+            "desc": "「自动战斗设置」弹窗的**另一种形态**（用户 2026-11-15 帧）：当天**还没跑过焕发**时，底部多一行 `每日焕发 · 允许 · 10/10`。这条帧同时是 `ValBloomRemain` 的正样本，也是 `DlgAutoBattle` 的第二种布局（内容比旧帧整体上移，`设置自动战斗次数` 从 y=363 变 y=306）",
+            "expect": [
+                "DlgAutoBattle",
+                "ValBloomRemain",
+                "PageGuide"
+            ],
+            "allow": [
+                "BtnAutoBattleCancel"
+            ]
+        },
+        {
+            "file": "dlg_battle_log.png",
+            "desc": "44 圆形角斗场 · **「战斗记录」弹窗**（用户 2026-11-15 提供，942x530 等比放大到 1280x720）：标题 `战斗记录` + 底部 `最近20场战斗记录。`。这是 `DlgBattleLog` 长期缺失的正样本帧（`pending_coverage` 里唯一一项）—— 之前 76 张候选帧全不命中，只有负样本侧证据。它**一进 44 面板就自动弹出来并盖住底部剩余次数**，不先收掉就读不到 `x/y`，多场循环会误判成「读不到次数」而中止。背景 `PagePvp44` 同时成立",
+            "expect": [
+                "DlgBattleLog",
+                "PagePvp44"
+            ],
+            "allow": [
+                "BtnBattleLogClose"
+            ]
+        },
+        {
+            "file": "dlg_inn_panel.png",
+            "desc": "**「25级旅馆」底部抽屉面板**（2026-11-14 真机帧）：标题 `25级旅馆` + 按钮 `设施管理`。主界面点旅店建筑、或那排图标里的「金币」，都会打开它 —— 2026-11-14 之前它没有判据、`close_dialogs()` 收不掉，启动链里误开就会挡住后面所有任务。关闭方式：点面板上方空白 `(640,250)`（没有 ✕）",
+            "expect": [
+                "DlgInnPanel"
+            ],
+            "allow": [
+                "BtnInnPanelClose"
+            ]
+        },
+        {
+            "file": "dlg_sweep_result.png",
+            "desc": "**「扫荡」结算面板**（2026-11-14 第二次一挂一串：5 个任务全失败）：标题 `扫荡` + 左侧「正在扫荡… 0/15」+ 右侧 `重新排序扫荡结果` + 底部黄「确认」。判据必须用「重新排序扫荡结果」做第二信号 —— 单看「扫荡」会和背景卡片上的 `-10 扫荡` 按钮撞（`rift.png` 就是这个负样本）。点确认只关面板、不再扣资源。背景页 `PageGuide` 同时成立",
+            "expect": [
+                "DlgSweepResult",
+                "PageGuide"
+            ],
+            "allow": [
+                "BtnSweepResultConfirm",
+                "BtnNoticeAck",
+                "BtnTipSentConfirm"
+            ]
+        },
+        {
+            "file": "dlg_auto_battle.png",
+            "desc": "**「自动战斗设置」弹窗**挡在游玩指南页上（2026-11-14 用户跑任务时的失败帧）：这一帧导致后面 6 个任务全部「NavBack 未命中 → 回锚点没成功」，因为 `DlgAutoBattle` 当时不在 `DIALOG_NODES` 里、`close_dialogs()` 收不掉它。关键安全点：底部右侧绿「扫荡」= 扣体力（帧上写 `62 (-10)`），关闭**只能点左侧「取消」**。背景页 `PageGuide` 同时成立",
+            "expect": [
+                "DlgAutoBattle",
+                "PageGuide"
+            ],
+            "allow": [
+                "BtnAutoBattleCancel"
+            ]
+        },
+        {
+            "file": "dlg_game_update.png",
+            "desc": "**游戏内**「下载资源」弹窗（2026-11-06 真机帧，3.55.0 冷启动后 110MB）：`下载资源` + `需要下载的内容` + `[取消][确认]`。补这个判据的原因：在此之前 `DlgNotice`/`DlgReward`/`DlgAdLayer` **一个都不命中**，`close_dialogs()` 收不掉它，冷启动任务（批 2）必踩；同模板在首次进入某个活动页时也会弹（挖挖页 2MB）。点「确认」只下载资源，不花钱不消耗。注意 `BtnNoticeCancel` / `BtnTipSentConfirm` 也会命中：它们的 ROI 宽（前者 `[480,555,120,50]` 正好罩住左下的「取消」，后者 `[500,540,300,80]` 罩住右下的「确认」），**任何带确认/取消的弹窗都命中** —— 按钮判据本就不可能互斥，安全全靠 `Dlg*` 判据把关（`DIALOG_CLOSERS` 只按命中的 `Dlg*` 决定点哪个按钮）。",
+            "expect": [
+                "DlgGameUpdate"
+            ],
+            "allow": [
+                "BtnGameUpdateConfirm",
+                "BtnNoticeCancel",
+                "BtnTipSentConfirm"
+            ]
+        },
+        {
+            "file": "dlg_announcement.png",
+            "desc": "**公告浮层**（2026-11-06 真机帧，游戏更新到 3.55.0 后首次进村）：`活动公告 / 系统公告` 双 tab 面板。这是 `DlgAnnouncement` 长期缺失的正样本帧（原先一直挂在 `pending_coverage`）；`DlgStartup` = `Or{DlgAdLayer, DlgAnnouncement}`，公告成立时它必然成立；`BtnAnnouncementClose` 是它的 ✕ 点击包装（`And{DlgAnnouncement}` + target `(1228,77)`），公告开着时必然成立",
+            "expect": [
+                "DlgAnnouncement",
+                "DlgStartup"
+            ],
+            "allow": [
+                "BtnAnnouncementClose"
+            ]
+        },
+        {
+            "file": "daily_checkin.png",
+            "desc": "每日签到弹窗（2026-11-01 真机帧）：28 天格子，第 7 天可领；底部还有一条活动横条。`BtnDailyCheckIn` = 可领格的蓝色 ColorMatch",
+            "expect": [
+                "BtnDailyCheckIn"
+            ],
+            "allow": []
+        }
+    ],
+    "pending_coverage": []
+}

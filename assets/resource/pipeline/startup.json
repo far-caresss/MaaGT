@@ -1,6 +1,7 @@
 {
     "1": {},
     "Return": {
+        "desc": "回主界面的兜底链。⚠️ `停止`（主界面判据）必须排在 `返回` 之前：`返回` 是 ColorMatch 找左上角纯白像素（count=5），主界面左上角的玩家头像/昵称/等级也是白的，会误命中 → 点击 (37,25) 打开「守护者信息」个人页 → 个人页同样误命中 → 反复开关个人页（2026-11-03 实测 08:40:18~08:40:29 死亡循环）。",
         "max_hit": 1,
         "post_wait_freezes": 500,
         "timeout": 60000,
@@ -8,9 +9,9 @@
             "[JumpBack]取消",
             "[JumpBack]确认",
             "[JumpBack]点击空白处关闭弹窗",
-            "[JumpBack]返回",
+            "停止",
             "[JumpBack]人物窗返回",
-            "停止"
+            "[JumpBack]返回"
         ]
     },
     "StartGT": {
@@ -103,33 +104,6 @@
             }
         }
     },
-    "判断确认颜色": {
-        "recognition": {
-            "type": "ColorMatch",
-            "param": {
-                "roi": [
-                    159,
-                    305,
-                    958,
-                    403
-                ],
-                "lower": [
-                    [
-                        255,
-                        207,
-                        17
-                    ]
-                ],
-                "upper": [
-                    [
-                        255,
-                        207,
-                        17
-                    ]
-                ]
-            }
-        }
-    },
     "取消": {
         "recognition": {
             "type": "OCR",
@@ -186,14 +160,15 @@
         ]
     },
     "弹窗": {
+        "desc": "开屏礼包广告层：右上角白色 X 是「下一个商品」，点完所有商品后该层自动关闭（真机实测 2026-10-25）。",
         "recognition": {
             "type": "ColorMatch",
             "param": {
                 "roi": [
-                    1214,
-                    49,
-                    17,
-                    19
+                    1220,
+                    26,
+                    32,
+                    32
                 ],
                 "lower": [
                     [
@@ -210,7 +185,15 @@
             }
         },
         "action": {
-            "type": "Click"
+            "type": "Click",
+            "param": {
+                "target": [
+                    1236,
+                    42,
+                    1,
+                    1
+                ]
+            }
         },
         "timeout": 2000,
         "next": [
@@ -245,17 +228,18 @@
         ]
     },
     "月卡": {
+        "desc": "开屏礼包广告轮播里的「付费钻石月卡」商品。原来是 TemplateMatch，模板图 StarUp/月卡钻石.png 缺失，节点永久不命中且每次空转 20s，改为 OCR（2026-10-25 真机标定）。",
         "recognition": {
-            "type": "TemplateMatch",
+            "type": "OCR",
             "param": {
                 "roi": [
-                    499,
-                    253,
-                    293,
-                    252
+                    845,
+                    110,
+                    290,
+                    60
                 ],
-                "template": [
-                    "StarUp/月卡钻石.png"
+                "expected": [
+                    "付费钻石月卡"
                 ]
             }
         },
@@ -263,10 +247,10 @@
             "type": "Click",
             "param": {
                 "target": [
-                    1227,
-                    34,
-                    21,
-                    24
+                    1236,
+                    42,
+                    1,
+                    1
                 ]
             }
         },
@@ -275,6 +259,7 @@
         ]
     },
     "点击空白处关闭弹窗": {
+        "desc": "「点击空白处关闭弹窗」类奖励/结算弹窗 → 点右上空白处。`target` 原来是 `[1236,48,0,0]`（**0 宽高矩形**，框架语义不明确，曾记成「实点 (1256,666) 与 target 对不上」的悬案）。2026-11-06 改成 `1x1`：中心就是 `(1236,48)`，语义明确、意图不变。",
         "recognition": {
             "type": "OCR",
             "param": {
@@ -289,8 +274,8 @@
                 "target": [
                     1236,
                     48,
-                    0,
-                    0
+                    1,
+                    1
                 ]
             }
         }
@@ -474,5 +459,392 @@
                 ]
             }
         }
+    },
+    "StartUpDailyCheckIn": {
+        "desc": "**每日签到**：循环点「可领格」（`BtnDailyCheckIn` 蓝色 ColorMatch）。点一格会弹「领取奖励」，`TapWhilePresent` 每轮先 `close_dialogs()` 把它收掉，于是能一路点到没有可领格为止（2026-11-01 为此改了原语）。格子上只有奖励图标、没有文字，所以不能用 OCR 判可领态。**前置判据必须有**：2026-11-01 真机踩到——写成 `DirectHit` 时，面板已经关掉的情况下 `StartUpDailyCheckInClose` 判不到「签到」，整条链直接算失败；改成判「签到」标题后，没有面板就自然不命中、由启动链跳到下一环。",
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    {
+                        "recognition": {
+                            "type": "OCR",
+                            "param": {
+                                "roi": [
+                                    560,
+                                    95,
+                                    260,
+                                    55
+                                ],
+                                "expected": [
+                                    "签到"
+                                ]
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "TapWhilePresent",
+                "custom_action_param": {
+                    "button": "BtnDailyCheckIn",
+                    "max_times": 10,
+                    "interval": 1.2
+                }
+            }
+        },
+        "next": [
+            "StartUpDailyCheckInClose"
+        ]
+    },
+    "StartUpDailyCheckInClose": {
+        "desc": "关掉**当前**签到面板：右上角 ✕。坐标按 1280×720 标定（2026-11-01 真机帧，显示坐标 ×1.172）。识别用标题「签到」，避免在别的页面上误点。`max_hit: 5` 是防死循环的硬上限（万一 ✕ 点不掉，不会无限循环）。",
+        "max_hit": 5,
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    {
+                        "recognition": {
+                            "type": "OCR",
+                            "param": {
+                                "roi": [
+                                    560,
+                                    95,
+                                    260,
+                                    55
+                                ],
+                                "expected": [
+                                    "签到"
+                                ]
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    917,
+                    122,
+                    1,
+                    1
+                ]
+            }
+        },
+        "next": [
+            "StartUpDailyCheckInRetry",
+            "StartUpDailyCheckInDone"
+        ]
+    },
+    "StartUpDailyCheckInRetry": {
+        "desc": "关掉一个签到面板后，确认**是否又弹出一个**。用户说明（2026-11-01）：领完一个之后会返回、然后可能再弹一个——可能是另一个「一月签到」，也可能是「一周签到」。命中就回去继续领，不命中说明没有更多面板。`timeout: 5000` 是给新面板的出现留时间（比默认 20s 短，避免每个面板白等）。⚠️ 多面板分支**尚未真机验证**：2026-11-01 当天只有一个面板。",
+        "timeout": 5000,
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    {
+                        "recognition": {
+                            "type": "OCR",
+                            "param": {
+                                "roi": [
+                                    560,
+                                    95,
+                                    260,
+                                    55
+                                ],
+                                "expected": [
+                                    "签到"
+                                ]
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "next": [
+            "StartUpDailyCheckIn"
+        ]
+    },
+    "StartUpDailyCheckInDone": {
+        "desc": "签到全部处理完（一个或多个面板都领过并关掉了）→ 交给宝箱收集，再到结束。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "DoNothing"
+        },
+        "next": [
+            "StartUpCollectRewards"
+        ]
+    },
+    "StartUpDismissAds": {
+        "desc": "**关掉开屏礼包广告轮播**：点一次 ✕ 只是翻到下一项（实测至少 6 项、分若干组）。用 `TapWhilePresent{BtnAdClose}` —— 每轮先判 `DlgAdLayer`（底部「2周内不再提示」复选框）再点 ✕ `(1240,41)`，广告全关后判据不命中就自动停。**绝不能改成盲点固定坐标**：主界面右上白像素比广告还多，会点到设置齿轮（2026-11-01 真踩过）。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "TapWhilePresent",
+                "custom_action_param": {
+                    "button": "BtnAdClose",
+                    "max_times": 15,
+                    "interval": 1.5
+                }
+            }
+        },
+        "next": [
+            "StartUpDailyCheckIn",
+            "StartUpAdStuck",
+            "StartUpCollectRewards"
+        ]
+    },
+    "StartUpAdStuck": {
+        "desc": "**兜底留档**：`StartUpDismissAds` 点满 15 次后如果还在广告层，说明遇到了没见过的广告（✕ 位置变了 / 底部没有复选框 / 要倒计时才关）。这里**只 `DumpFrame` 落盘、不盲点任何坐标**，把画面存成 `debug/ad_stuck_<月日_时分秒>.png`，事后拿它补判据或加点击分支。宁可卡住也不乱点——2026-11-01 盲点 (1240,41) 曾把游戏点进设置页。",
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "DlgAdLayer"
+                ]
+            }
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "DumpFrame",
+                "custom_action_param": {
+                    "tag": "ad_stuck"
+                }
+            }
+        },
+        "next": []
+    },
+    "BtnClickStart": {
+        "desc": "启动页中央的「点击开始」（2026-11-01 实测：约 33s 出现，**不点游戏不会自己往下走**）。判据双通道 `Or`：旧 `开始游戏` 的模板匹配（`StarUp/适龄提醒.png`）+ OCR「点击开始」——模板图曾被怀疑缺失过，补一条文字判据不至于全哑。点击坐标固定 `(642,636)`：**外层必须再包一层 `And`**，因为裸模板节点会带识别框（左下角适龄提醒徽标），而这里要点的是屏幕中央。",
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    {
+                        "recognition": {
+                            "type": "Or",
+                            "param": {
+                                "any_of": [
+                                    "开始游戏",
+                                    {
+                                        "recognition": {
+                                            "type": "OCR",
+                                            "param": {
+                                                "roi": [
+                                                    440,
+                                                    580,
+                                                    400,
+                                                    110
+                                                ],
+                                                "expected": [
+                                                    "点击开始"
+                                                ]
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    642,
+                    636,
+                    1,
+                    1
+                ]
+            }
+        }
+    },
+    "BtnAnnouncementClose": {
+        "desc": "「公告」浮层的右上 ✕ `(1228,77)`（旧 `关闭公告` 节点用了很多年的坐标）。判据用判据层 `DlgAnnouncement`，**外层必须再包一层 `And`**：裸 OCR 节点带「公告」两个字的识别框，直接点会点到标题文字上、关不掉。**不要改成 `And{DlgStartup}`**：合并判据里还有广告层，那样会在公告页上点广告的 ✕ 坐标。",
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "DlgAnnouncement"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    1228,
+                    77,
+                    1,
+                    1
+                ]
+            }
+        },
+        "next": [
+            "StartUpDismissAds"
+        ]
+    },
+    "StartUpDownloadConfirm": {
+        "desc": "启动链里点**游戏内「下载资源」**的「确认」。⚠️ 为什么不用现成的 `BtnGameUpdateConfirm`：那个只判 OCR「确认」`(690,555,160,70)`，在「提示 · 确定退出游戏?」上照样命中 —— 放进 `RepeatUntilFound` 的候选里就会误确认、把游戏关掉。这里用 `And{DlgGameUpdate}` 做门（标题 `下载资源` + 正文 `需要下载的内容`），再配对固定 `target (750,578)`；**外层必须包 `And`**，因为组合节点带的是子判据的识别框（`(599,106,81,25)` 是标题文字），裸点会点到标题上。这个弹窗 2026-11-06 实测会出现两次：冷启动后 110MB、首次进某个活动页 2MB（后者不属于启动链）。点「确认」只下载资源，不花钱不消耗。",
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "DlgGameUpdate"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    750,
+                    578,
+                    1,
+                    1
+                ]
+            }
+        }
+    },
+    "StartUpBoot": {
+        "desc": "**冷启动第一环：把「点击开始」「热更新确认」「公告 ✕」一路点过去**，直到出现开屏弹层（`DlgStartup`：广告轮播或公告）、签到面板、或主界面为止（三者都是「启动有进展」的等价信号，谁先出现就交给下一环）。`RepeatUntilFound` 一轮只点**命中的第一个**候选（2026-11-01 起 `inner` 支持列表），所以不会在同一轮里连点两个不同画面。`repeat_count: 70 / interval: 2.0` ≈ 最多等 **140s**。这个数是按实测叠出来的：启动页约 33s 出现 + 点「点击开始」后的加载 + 首次还要下载资源 45s，冷启动一次能到 80s 上下；用户 2026-11-14 反馈「开始游戏之后会加载一段时间」，所以再留一倍余量。**注意这是上限不是固定等待**：任一轮判到 `PageMain` / `DlgStartup` / 签到面板就立即往下走，加载快的时候不会白等。原来写 25（50s），连「33s 启动页 + 45s 下载」都覆盖不住。`StartUpDownloadConfirm` 排在内层**第一位**：它一出现就挡住整屏，先点掉再谈别的。点空白关弹窗**故意不开**：启动页和公告都不吃空白点击，乱点会点到别的东西。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "RepeatUntilFound",
+                "custom_action_param": {
+                    "inner": [
+                        "StartUpDownloadConfirm",
+                        "BtnClickStart",
+                        "热更新",
+                        "BtnAnnouncementClose"
+                    ],
+                    "wait_nodes": [
+                        "PageMain",
+                        "DlgStartup",
+                        "StartUpDailyCheckIn"
+                    ],
+                    "repeat_count": 70,
+                    "interval": 2.0
+                }
+            }
+        },
+        "next": [
+            "StartUpSettle"
+        ]
+    },
+    "StartUpNav": {
+        "desc": "批 2 · 启动链路（新链）。旧链 `StartUp` / `StartGT` 保留不动。链路：`StartApp` → `StartUpBoot`（点击开始 / 热更新 / 公告 ✕）→ `StartUpSettle`（广告轮播 / 每日签到）→ `StartUpSettleDone`。**不再用固定的 `post_delay: 30000` 干等**：`StartUpBoot` 自己轮询，启动页一出就能点。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "StartApp",
+            "param": {
+                "package": "com.bilibili.snake"
+            }
+        },
+        "post_delay": 2000,
+        "next": [
+            "StartUpBoot"
+        ]
+    },
+    "StartUpSettle": {
+        "desc": "**开屏收尾入口**（`StartUpBoot` 之后调用）：`公告 ✕`（判据不命中自动跳过）→ 广告轮播 → 每日签到 → 兜底留档 → 结束，**全部线性 `next` 串接**。⚠️ 2026-11-01 真机踩坑：这里原来是 `[JumpBack]` 环，冷启动实跑 98.8s 明明走完并回到主界面，`job.succeeded` 却是 **False** —— 任务详情里 `DismissAds` 之后多出一个**空名节点 completed=False**。改成线性后不再有 JumpBack 返回点，链路长度仍然由各环节自己的判据/`max_times` 兜住（`StartUpDismissAds` 15 次、签到 `max_hit: 5`）。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "next": [
+            "BtnAnnouncementClose",
+            "StartUpDismissAds"
+        ]
+    },
+    "StartUpCollectRewards": {
+        "desc": "**到旅馆界面后把主界面上可领的浮动奖励点掉**（用户 2026-11-14 要求）：旅店上方那一排图标（金币 / 粉心 / 蓝紫方块…）+ 地上冒出来的宝箱，用户原话「那一排的图标点哪个都能领」。用 `TapWhilePresent{buttons: [...]}`：每轮按顺序试，**命中哪个点哪个**（一轮只点一下），图标领完即消失，全部不命中就自动停。`max_times: 12` 是硬上限。**判据不命中就静默跳过**，绝不让启动任务因此失败；点击只领奖励、零消耗，弹出的奖励窗由每轮 `close_dialogs()` 收掉。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "TapWhilePresent",
+                "custom_action_param": {
+                    "buttons": [
+                        "BtnMainChest"
+                    ],
+                    "max_times": 6,
+                    "interval": 1.2
+                }
+            }
+        },
+        "next": [
+            "StartUpTapInnIcon",
+            "StartUpSettleDone"
+        ]
+    },
+    "StartUpTapInnIcon": {
+        "desc": "点**旅店正上方中间**那一个图标（用户 2026-11-14：那一排图标的数量和种类都会变，别去认图标，**认旅店建筑、再按固定偏移点上方**）。判据是旅店**屋顶**的模板 `Main/旅店屋顶.png`（84×47，源框 `(548,253)-(632,300)`，真机帧 `tests/golden/inn_icon.png`），阈值 0.8、ROI 限定在旅店附近 `[400,200,400,200]`；动作点算好的绝对坐标 `(575,200)`（= 旅店中心 x 正上方那一排的中点）。**只点一次**。旅店模板失配时整条节点不命中 → 外层 `next` 的 `StartUpSettleDone` 兜底跳过，绝不让启动任务失败。⚠️ 别改成点那排里的**金币**图标：那是打开「25级旅馆」面板（见 `BtnMainCoin` 的警告）。",
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    400,
+                    200,
+                    400,
+                    200
+                ],
+                "template": "Main/旅店屋顶.png",
+                "threshold": 0.8
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    575,
+                    200,
+                    1,
+                    1
+                ]
+            }
+        },
+        "next": [
+            "StartUpSettleDone"
+        ]
+    },
+    "StartUpSettleDone": {
+        "desc": "开屏处理完毕（广告关了、签到领了、宝箱点了），此时应已在主界面。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "DoNothing"
+        },
+        "next": []
     }
 }

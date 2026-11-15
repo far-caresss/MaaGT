@@ -77,5 +77,79 @@
         "action": {
             "type": "Click"
         }
+    },
+    "FriendNav": {
+        "desc": "批 2 · 好友收礼（新链，零消耗）。旧链 `Friend` 保留不动。链路：`NavTo(PageFriend)` → 断言确实在好友页 → `RepeatUntilFound`/`TapWhilePresent` 把页面上所有「领取」点掉（`FriendCollect`）→ 收尾关掉「获得礼物」弹窗。菜单/好友两个入口已抽到导航层 `NavMenu` / `NavFriend`。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "NavTo",
+                "custom_action_param": {
+                    "target": "PageFriend"
+                }
+            }
+        },
+        "next": [
+            "FriendAssert"
+        ]
+    },
+    "FriendAssert": {
+        "desc": "**点之前先确认自己在好友页**（架构 §3.2 第 5 条）。`AssertOnPage` 不满足就什么都不点、直接失败返回。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "AssertOnPage",
+                "custom_action_param": {
+                    "page": "PageFriend"
+                }
+            }
+        },
+        "next": [
+            "FriendCollect",
+            "FriendDone"
+        ]
+    },
+    "FriendCollect": {
+        "desc": "点**一次**好友页底部的「一键领取/送礼」（判据 `BtnFriendGift`，实测框 `(425,649,89,20)`）：这个按钮本身就是「一次性收全部 + 送全部」，点一次就够。⚠️ 2026-11-01 真机踩到：原来写成 `TapWhilePresent{max_times: 10}`，结果**同一个按钮被连点 10 次**（判据一直在，因为是同一个按钮不是多格），最后弹出 `提示 · 已经向所有好友发送礼物` 把界面堵住 —— 所以这里必须点一次，弹窗交给 `FriendDone`（`NavTo` 开头的 `close_dialogs()` 里有 `DlgTipSent`）。收礼**不消耗**资源，不需要闸门。",
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "BtnFriendGift",
+                    "ValFriendGiftReady"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "FriendDone"
+        ]
+    },
+    "FriendDone": {
+        "desc": "收尾：领完会弹「获得礼物」（底部带『点击空白处关闭弹窗』→ 判据 `DlgReward`）。用 `NavTo{PageFriend}` 收掉它——`nav_to` 每轮开头先 `close_dialogs()`，且**已在目标页时走 0 步直接返回**，所以既是幂等收尾，也保证任务结束时界面干净。2026-10-31 真机踩到：这里原写 `DoNothing`，弹窗会被留在结算界面上。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "NavTo",
+                "custom_action_param": {
+                    "target": "PageFriend"
+                }
+            }
+        },
+        "next": []
     }
 }

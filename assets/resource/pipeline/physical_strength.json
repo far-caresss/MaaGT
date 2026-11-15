@@ -544,6 +544,7 @@
         }
     },
     "焕发未完成": {
+        "desc": "裂痕卡片上**还有焕发次数**（形如 `N/10`）。⚠️ 2026-11-15 修正：原来 `expected` 写死 `10/10`，等于「只有满额那天才认得出来」—— 剩 9/10、8/10 时全部判不出，会被 `焕发已完成` 抢走直接结束。改成 `/10` 只要读到分数就成立。命中后走**焕发专用支线** `RiftBloomSweep`（点扫荡 → 弹窗里再用 `ValBloomRemain` 二次确认「每日焕发」那一行）。",
         "recognition": {
             "type": "OCR",
             "param": {
@@ -554,12 +555,12 @@
                     128
                 ],
                 "expected": [
-                    "10/10"
+                    "/10"
                 ]
             }
         },
         "next": [
-            "扫荡"
+            "RiftBloomSweep"
         ]
     },
     "红碎": {
@@ -937,5 +938,204 @@
                 ]
             }
         }
+    },
+    "RiftAwakenNav": {
+        "desc": "批 3 · 觉醒石（新链）。旧链 `Awakening` 保留不动。`NavTo(PageGuideRift)` 一跳到位（真机实测 PageMain →(游玩)→ PageGuide →(裂痕)→ PageGuideRift，3 步），断言通过后交给旧内部节点 `资源觉醒`（它自己点「资源/觉醒副本」子页 → 进副本 → 扫荡）。内部 39 节点一行不动（架构文档 §8 决策）。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "NavTo",
+                "custom_action_param": {
+                    "target": "PageGuideRift"
+                }
+            }
+        },
+        "next": [
+            "RiftAwakenAssert"
+        ]
+    },
+    "RiftAwakenAssert": {
+        "desc": "点「资源觉醒」之前先确认确实在裂痕页（架构 §3.2 第 5 条）：不在就什么都不点、直接失败。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "AssertOnPage",
+                "custom_action_param": {
+                    "page": "PageGuideRift"
+                }
+            }
+        },
+        "next": [
+            "资源觉醒"
+        ]
+    },
+    "RiftBloomSweep": {
+        "desc": "焕发专用：点副本卡片上的「扫荡」→ 弹出「自动战斗设置」。识别参数照抄旧 `扫荡` 节点（同一个 OCR ROI `[624,559,236,97]`），但**故意不复用它** —— `扫荡` 还被忒提斯 / 觉醒两条链引用，改那条的 next 会把它们也带偏（那两条的弹窗里没有「每日焕发」行）。",
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    624,
+                    559,
+                    236,
+                    97
+                ],
+                "expected": [
+                    "扫荡"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 1400,
+        "next": [
+            "RiftBloomCheck",
+            "RiftBloomSkip"
+        ]
+    },
+    "RiftBloomCheck": {
+        "desc": "**弹窗里有「每日焕发 允许 N/N」→ 今天还有免费焕发次数 → 点绿色「扫荡」确认**（用户 2026-11-15 明确：有这一行就继续跑）。走 `TapUnlessConsumes` 闸门并显式 `allow_consume: true` —— 用户已授权跑；但日志仍会记下消耗（帧上实测 `-90 体力 / -10 道具`），以后要能一键停就把这个值接到界面开关上。",
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "ValBloomRemain"
+                ]
+            }
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "TapUnlessConsumes",
+                "custom_action_param": {
+                    "button": "BtnAutoBattleSweep",
+                    "consumes": "体力 + 道具",
+                    "cost": "帧上实测 90(-90) 体力 / 2,865(-10) 道具",
+                    "allow_consume": true
+                }
+            }
+        },
+        "post_delay": 1800,
+        "next": [
+            "RiftBloomDone"
+        ]
+    },
+    "RiftBloomSkip": {
+        "desc": "**弹窗里没有「每日焕发」那一行 → 今天已经跑完了 → 点「取消」关掉弹窗、正常结束**（用户 2026-11-15 明确要求：识别不到就视为今日已完成，不要报错）。用 `TapUnlessConsumes{consumes: null, optional: true}`：取消本身不消耗，`optional` 让「按钮不在」也不判失败。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "TapUnlessConsumes",
+                "custom_action_param": {
+                    "button": "BtnAutoBattleCancel",
+                    "consumes": null,
+                    "optional": true
+                }
+            }
+        },
+        "post_delay": 800,
+        "next": [
+            "RiftBloomDone"
+        ]
+    },
+    "RiftBloomDone": {
+        "desc": "焕发任务收尾。两种情况都停在这里：① 有每日焕发 → 已扫荡；② 没有 → 已点取消退出（今日已完成）。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "DoNothing"
+        },
+        "next": []
+    },
+    "RiftBloomNav": {
+        "desc": "批 3 · 焕发 / 非焕发（新链，两个任务共用同一个 entry，靠 option 覆写 `裂痕.next` 与 `进入进化石/进入开花石/进入资源.next` 区分 9 / 8 个 case —— 占位符对 select 无效，必须各写 override）。旧入口 `进入裂痕` 保留不动。断言后**必须经过 `裂痕`**：option 注入的 `next` 挂在它身上，绕过就拿不到路线。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "NavTo",
+                "custom_action_param": {
+                    "target": "PageGuideRift"
+                }
+            }
+        },
+        "next": [
+            "RiftBloomAssert"
+        ]
+    },
+    "RiftBloomAssert": {
+        "desc": "同 `RiftAwakenAssert`：确认在裂痕页再去点卡片。⚠️ 裂痕页的「进化石副本 / 开花石副本 / 资源·觉醒副本」三个子页都由 `PageGuideRift` 覆盖（真机帧 `tests/golden/rift.png` / `_tmp/shots/rift_awaken.png` 两张都命中），所以这里判 `PageGuideRift` 就够。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "AssertOnPage",
+                "custom_action_param": {
+                    "page": "PageGuideRift"
+                }
+            }
+        },
+        "next": [
+            "裂痕"
+        ]
+    },
+    "RiftThetisNav": {
+        "desc": "批 3 · 忒提斯（新链）。旧链 `Thetis` 保留不动。`NavTo(PageGuide)` 走到游玩指南 → 断言 → 点「推荐」tab → 交给旧节点 `忒提斯`（它自己 OCR 卡片名并点进去，后面接 `忒提斯已完成` / `忒提斯扫荡` → `扫荡`）。⚠️ **必须点推荐**：`PageGuide` 判据在四个 tab 上都成立，NavTo 不保证 tab（用户 2026-11-01：忒提斯只在推荐页能进）。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "NavTo",
+                "custom_action_param": {
+                    "target": "PageGuide"
+                }
+            }
+        },
+        "next": [
+            "RiftThetisAssert"
+        ]
+    },
+    "RiftThetisAssert": {
+        "desc": "点「推荐」tab 之前先确认在游玩指南（架构 §3.2 第 5 条），不在就什么都不点、直接失败。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "AssertOnPage",
+                "custom_action_param": {
+                    "page": "PageGuide"
+                }
+            }
+        },
+        "next": [
+            "NavGuideRecommend"
+        ]
     }
 }

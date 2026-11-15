@@ -1,0 +1,317 @@
+{
+    "Pvp44All": {
+        "desc": "L3 · 44 全部次数（PI 任务「44」的入口）。轮次/停止条件在 `agent/pvp44.py:Pvp44Rounds`：每轮开打前读 `ValPvpTickets` 的 `x/y`，读到 0 或读不到就停，不会超打。`allow_consume` 由 PI 开关「44消耗挑战次数」覆盖（默认 Yes，保持本任务原本就会消耗次数的行为）。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "Pvp44Rounds",
+                "custom_action_param": {
+                    "max_rounds": 6,
+                    "allow_consume": true
+                }
+            }
+        },
+        "next": []
+    },
+    "Pvp44Run": {
+        "desc": "L3 · 44 单场（新链，2026-10-31 真机实测后按真实时序重排）。老链 `Pvp_4v4` 保留不动。链路：NavTo(PagePvp44) → 挑最弱一行点开站位设置 → 等弹窗 → **消耗闸门** 点「开始战斗 -1」→ 等结果面板 → 点确认 → 等回面板 → 收奖励弹窗。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "NavTo",
+                "custom_action_param": {
+                    "target": "PagePvp44"
+                }
+            }
+        },
+        "next": [
+            "Pvp44RefreshCards"
+        ]
+    },
+    "Pvp44RefreshCards": {
+        "desc": "**开打前先把「已经打过的卡」换掉**：卡片右上角出现青色 ↻ 就说明这张卡上次打过了（输了必出现，赢了不一定）。用户规则：先点 ↻ 换对手，再挑最弱的打——否则 picker 会一直选中同一个打不过的对手。`TapWhilePresent` 按判据点，点上没有 ↻ 就 0 次点击直接过。本页共 **3** 张战斗卡（`PvpWeakestPicker.BUTTON_RECTS` 三行，行距 150），故 `max_times` 取 3：最坏情况三张全带 ↻ 时正好全部换掉；少带几张就少点几次。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "TapWhilePresent",
+                "custom_action_param": {
+                    "button": "刷新",
+                    "max_times": 3,
+                    "interval": 1.0
+                }
+            }
+        },
+        "next": [
+            "Pvp44Pick"
+        ]
+    },
+    "Pvp44Pick": {
+        "desc": "点「队伍每秒伤害」最低那一行的「开始战斗」。**这一步不扣次数**，只是打开站位设置弹窗。",
+        "recognition": {
+            "type": "Custom",
+            "param": {
+                "custom_recognition": "PvpWeakestPicker",
+                "custom_recognition_param": {
+                    "metric": "dps"
+                }
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "next": [
+            "Pvp44WaitFormation"
+        ]
+    },
+    "Pvp44WaitFormation": {
+        "desc": "等「站位设置」弹窗出现（只观察不点击）。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "WaitUntil",
+                "custom_action_param": {
+                    "nodes": [
+                        "DlgPvpFormation"
+                    ],
+                    "timeout": 20,
+                    "interval": 1
+                }
+            }
+        },
+        "next": [
+            "Pvp44Confirm"
+        ]
+    },
+    "Pvp44Confirm": {
+        "desc": "**消耗闸门**：点站位设置里的「开始战斗 -1」= 真扣 1 次挑战次数。默认 `allow_consume: false` → 直接拒点。放开需 PI option 覆写本节点（架构 §3.4）。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "TapUnlessConsumes",
+                "custom_action_param": {
+                    "button": "BtnPvpFormationFight",
+                    "consumes": "ticket",
+                    "cost": "1 次挑战次数",
+                    "allow_consume": false
+                }
+            }
+        },
+        "next": [
+            "Pvp44WaitResult"
+        ]
+    },
+    "Pvp44WaitResult": {
+        "desc": "战斗 60~75s：只等不点，出现「本场结果」面板即继续。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "WaitUntil",
+                "custom_action_param": {
+                    "nodes": [
+                        "DlgPvpResult"
+                    ],
+                    "timeout": 200,
+                    "interval": 3
+                }
+            }
+        },
+        "next": [
+            "Pvp44ResultLoss",
+            "Pvp44ResultWin"
+        ]
+    },
+    "Pvp44ResultLoss": {
+        "desc": "结果面板 = **失败**：点「确认」后要换掉这个对手（见 `Pvp44HomeRefresh`）。判断放在点确认**之前**（面板一旦关掉就读不到胜负了）。`expected` 收 `失败`/`败北` 两个词：OCR 抖动时任一命中即可（判据规范 §3.2）。",
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "DlgPvpResult",
+                    {
+                        "recognition": {
+                            "type": "OCR",
+                            "param": {
+                                "roi": [
+                                    60,
+                                    90,
+                                    230,
+                                    100
+                                ],
+                                "expected": [
+                                    "失败",
+                                    "败北"
+                                ]
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "DumpFrame",
+                "custom_action_param": {
+                    "tag": "pvp_loss"
+                }
+            }
+        },
+        "next": [
+            "Pvp44LossConfirm"
+        ]
+    },
+    "Pvp44LossConfirm": {
+        "desc": "战败路径的点确认（与胜利路径分开，纯粹为了让 `Pvp44ResultLoss` 在点之前把帧存下来）。",
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "DlgPvpResult"
+                ]
+            }
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "TapUnlessConsumes",
+                "custom_action_param": {
+                    "button": "BtnPvpResultConfirm",
+                    "consumes": null
+                }
+            }
+        },
+        "next": [
+            "Pvp44HomeRefresh"
+        ]
+    },
+    "Pvp44ResultWin": {
+        "desc": "结果面板 → 点「确认」（0 消耗）。**这是兜底分支**（不要求认得出「胜利」）：失败分支先判，判不出胜负时按胜利走，避免因 OCR 抖动整轮失败。",
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "DlgPvpResult"
+                ]
+            }
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "TapUnlessConsumes",
+                "custom_action_param": {
+                    "button": "BtnPvpResultConfirm",
+                    "consumes": null
+                }
+            }
+        },
+        "next": [
+            "Pvp44Home"
+        ]
+    },
+    "Pvp44HomeRefresh": {
+        "desc": "输了 → 等面板回来（同样是加载黑屏），然后换对手。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "WaitUntil",
+                "custom_action_param": {
+                    "nodes": [
+                        "PagePvp44"
+                    ],
+                    "timeout": 90,
+                    "interval": 3
+                }
+            }
+        },
+        "next": [
+            "Pvp44DismissRefresh"
+        ]
+    },
+    "Pvp44Home": {
+        "desc": "点确认后是**加载黑屏约 8s**，轮询等面板回来（不点击）。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "WaitUntil",
+                "custom_action_param": {
+                    "nodes": [
+                        "PagePvp44"
+                    ],
+                    "timeout": 90,
+                    "interval": 3
+                }
+            }
+        },
+        "next": [
+            "Pvp44Dismiss"
+        ]
+    },
+    "Pvp44Dismiss": {
+        "desc": "回面板后往往还压着「获得活动积分」奖励弹窗，用 NavTo 的收弹窗逻辑点空白处关掉，再确认停在面板。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "NavTo",
+                "custom_action_param": {
+                    "target": "PagePvp44",
+                    "max_steps": 3
+                }
+            }
+        },
+        "next": []
+    },
+    "Pvp44DismissRefresh": {
+        "desc": "战败路径专用：收掉奖励弹窗后结束本场。换对手交给下一轮开打前的 `Pvp44RefreshCards`（先收弹窗再点 ↻ 的顺序仍然成立，因为那一轮开头一定已经没有弹窗了）。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "NavTo",
+                "custom_action_param": {
+                    "target": "PagePvp44",
+                    "max_steps": 3
+                }
+            }
+        },
+        "next": []
+    }
+}

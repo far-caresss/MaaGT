@@ -1,8 +1,0 @@
-{
-    "task": [
-        {
-            "name": "随机进化",
-            "entry": "RandomEvolution"
-        }
-    ]
-}

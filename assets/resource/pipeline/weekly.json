@@ -1,0 +1,380 @@
+{
+    "WeeklyNav": {
+        "desc": "**周常任务入口**（2026-11-14 新建）：先导航到商店页。`NavTo(PageShop)` 一跳直达（`NAV_TABLE` 有 `PageMain →(商店)→ PageShop`），会自己收弹窗、回主界面再进商店。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "NavTo",
+                "custom_action_param": {
+                    "target": "PageShop"
+                }
+            }
+        },
+        "next": [
+            "WeeklyAssert"
+        ]
+    },
+    "WeeklyAssert": {
+        "desc": "确认真在商店页再动手（`PageShop` = 标题 `商店` + 首页签 `订阅卡` 两个本页独有信号）。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "AssertOnPage",
+                "custom_action_param": {
+                    "page": "PageShop"
+                }
+            }
+        },
+        "post_delay": 1200,
+        "next": [
+            "WeeklyScrollTop1"
+        ]
+    },
+    "WeeklyScrollTop1": {
+        "desc": "**先把左侧栏滑回顶部**：左侧栏比一屏长，上次任务可能停在底部（「忒提斯英雄传」那一带），那样「英雄成长」就不在 `(74,482)` 了。这里往下拨两段，保证从顶部开始找。已经到顶时再拨不会有副作用。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "SwipeSlider",
+                "custom_action_param": {
+                    "begin": [
+                        170,
+                        220
+                    ],
+                    "end": [
+                        170,
+                        600
+                    ],
+                    "duration": 500
+                }
+            }
+        },
+        "post_delay": 600,
+        "next": [
+            "WeeklyScrollTop2"
+        ]
+    },
+    "WeeklyScrollTop2": {
+        "desc": "第二段滑回顶部。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "SwipeSlider",
+                "custom_action_param": {
+                    "begin": [
+                        170,
+                        220
+                    ],
+                    "end": [
+                        170,
+                        600
+                    ],
+                    "duration": 500
+                }
+            }
+        },
+        "post_delay": 600,
+        "next": [
+            "WeeklyGrowthTab"
+        ]
+    },
+    "WeeklyGrowthTab": {
+        "desc": "点左侧竖排页签里的「**英雄成长**」（OCR 定位不写死坐标，页签文字 `(74,482,74,17)`）。",
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    40,
+                    430,
+                    170,
+                    110
+                ],
+                "expected": [
+                    "英雄成长"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 2000,
+        "next": [
+            "WeeklyGrowthBuy"
+        ]
+    },
+    "WeeklyGrowthBuy": {
+        "desc": "买「英雄成长 → 第一格 · 传说的觉醒石」（每周限购 3/3，单价 15,000）。`BuyShopItem` 一条龙：点格 `(379,361)` → 等数量弹窗 → 滑块拉满 → 过闸门 → 点价格。**闸门默认拒绝**，靠界面选项「周常 · 买英雄成长觉醒石」放开。失败（被拒 / 弹窗没出现）不拦后面，走 `on_error` 继续。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "BuyShopItem",
+                "custom_action_param": {
+                    "target": [
+                        379,
+                        361
+                    ],
+                    "consumes": "金币",
+                    "cost": "3×15,000 ≈ 45,000",
+                    "allow_consume": false
+                }
+            }
+        },
+        "next": [
+            "WeeklyThetisScroll1"
+        ],
+        "on_error": [
+            "WeeklyThetisScroll1"
+        ]
+    },
+    "WeeklyThetisScroll1": {
+        "desc": "商店左侧栏比一屏长，「忒提斯英雄传」在最下面 → **第一段下滑**。真机实测：滑两次可见（第 1 次露出「坎特币」，第 2 次露出「忒提斯英雄传」）。已经滑到底时再滑不会有副作用。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "SwipeSlider",
+                "custom_action_param": {
+                    "begin": [
+                        170,
+                        550
+                    ],
+                    "end": [
+                        170,
+                        180
+                    ],
+                    "duration": 600
+                }
+            }
+        },
+        "post_delay": 700,
+        "next": [
+            "WeeklyThetisScroll2"
+        ]
+    },
+    "WeeklyThetisScroll2": {
+        "desc": "左侧栏**第二段下滑**，把「忒提斯英雄传」顶出来（真机滚动后它在 `(71,586,113,26)`）。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "SwipeSlider",
+                "custom_action_param": {
+                    "begin": [
+                        170,
+                        550
+                    ],
+                    "end": [
+                        170,
+                        250
+                    ],
+                    "duration": 600
+                }
+            }
+        },
+        "post_delay": 700,
+        "next": [
+            "WeeklyThetisTab"
+        ]
+    },
+    "WeeklyThetisTab": {
+        "desc": "点左侧栏「**忒提斯英雄传**」。用 OCR 定位 —— **滑不到底就识别不到，流程会安全停在这里，绝不会去点商品格**。",
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    40,
+                    500,
+                    240,
+                    180
+                ],
+                "expected": [
+                    "忒提斯英雄传"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        },
+        "post_delay": 2000,
+        "next": [
+            "WeeklyThetisBuy1"
+        ]
+    },
+    "WeeklyThetisBuy1": {
+        "desc": "忒提斯英雄传 · 第 1 格「**英雄水晶 ×4**」200 坎特币（双周限购 6/6），格子 `(350,280)`。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "BuyShopItem",
+                "custom_action_param": {
+                    "target": [
+                        403,
+                        302
+                    ],
+                    "consumes": "坎特币",
+                    "cost": "拉满后总价（单价 200）",
+                    "allow_consume": false
+                }
+            }
+        },
+        "next": [
+            "WeeklyThetisBuy2"
+        ],
+        "on_error": [
+            "WeeklyThetisBuy2"
+        ]
+    },
+    "WeeklyThetisBuy2": {
+        "desc": "第 2 格「**祝福之书 ×1**」700 坎特币（每周限购 15/15），格子 `(590,280)`。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "BuyShopItem",
+                "custom_action_param": {
+                    "target": [
+                        673,
+                        302
+                    ],
+                    "consumes": "坎特币",
+                    "cost": "拉满后总价（单价 700）",
+                    "allow_consume": false
+                }
+            }
+        },
+        "next": [
+            "WeeklyThetisBuy3"
+        ],
+        "on_error": [
+            "WeeklyThetisBuy3"
+        ]
+    },
+    "WeeklyThetisBuy3": {
+        "desc": "第 3 格「**超凡专属装备宝箱**」14,000 坎特币（双周限购 1/1），格子 `(830,280)`。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "BuyShopItem",
+                "custom_action_param": {
+                    "target": [
+                        943,
+                        302
+                    ],
+                    "consumes": "坎特币",
+                    "cost": "14,000（限购 1）",
+                    "allow_consume": false
+                }
+            }
+        },
+        "next": [
+            "WeeklyThetisBuy4"
+        ],
+        "on_error": [
+            "WeeklyThetisBuy4"
+        ]
+    },
+    "WeeklyThetisBuy4": {
+        "desc": "第 4 格「**词条洗炼灵石 ×1**」950 坎特币（每周限购 1/1），格子 `(1070,280)`。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "BuyShopItem",
+                "custom_action_param": {
+                    "target": [
+                        1213,
+                        302
+                    ],
+                    "consumes": "坎特币",
+                    "cost": "950（限购 1）",
+                    "allow_consume": false
+                }
+            }
+        },
+        "next": [
+            "WeeklyThetisBuy5"
+        ],
+        "on_error": [
+            "WeeklyThetisBuy5"
+        ]
+    },
+    "WeeklyThetisBuy5": {
+        "desc": "第 5 格（第二行第 1 个）「**传说中的觉醒石 ×2**」200 坎特币（双周限购 6/6），格子 `(350,620)`。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "Custom",
+            "param": {
+                "custom_action": "BuyShopItem",
+                "custom_action_param": {
+                    "target": [
+                        403,
+                        557
+                    ],
+                    "consumes": "坎特币",
+                    "cost": "拉满后总价（单价 200）",
+                    "allow_consume": false
+                }
+            }
+        },
+        "next": [
+            "WeeklyDone"
+        ],
+        "on_error": [
+            "WeeklyDone"
+        ]
+    },
+    "WeeklyDone": {
+        "desc": "周常任务结束。各商品的购买结果看 `BuyShopItem` 的日志（被闸门拒绝 / 弹窗没出现 / 买成功都会写明）。",
+        "recognition": {
+            "type": "DirectHit",
+            "param": {}
+        },
+        "action": {
+            "type": "DoNothing"
+        },
+        "next": []
+    }
+}

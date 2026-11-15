@@ -1,0 +1,458 @@
+{
+    "NavMenuTask": {
+        "desc": "菜单面板 → 任务。旧节点 `任务` 用 TemplateMatch（模板图 StarUp/任务.png 缺失，永久不命中），这里改用 OCR。",
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    228,
+                    436,
+                    74,
+                    44
+                ],
+                "expected": [
+                    "任务"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        }
+    },
+    "NavMenu": {
+        "desc": "底栏「菜单」按钮。原为 `friend.json` 的 `菜单1`；批 2 迁到导航层，作为 `NAV_TABLE` 的通用一跳（主界面 ↔ 菜单覆盖层）。只点击，不带 `next`。",
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    25,
+                    592,
+                    82,
+                    125
+                ],
+                "expected": [
+                    "菜单"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    52,
+                    637,
+                    25,
+                    19
+                ]
+            }
+        }
+    },
+    "NavFriend": {
+        "desc": "菜单面板里的「好友」入口。原为 `friend.json` 的 `好友`；批 2 迁到导航层，只保留「点进去」这一步。",
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    305,
+                    477,
+                    116,
+                    132
+                ],
+                "expected": [
+                    "好友"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        }
+    },
+    "BtnAdClose": {
+        "desc": "开屏广告轮播的右上 ✕，固定 `(1240,41)`。**识别故意用 `DlgAdLayer`（底部复选框文案），不认白色 ✕**：右上角白色在主页面上比广告还多，ColorMatch 白会误判。用法：`TapWhilePresent{button: BtnAdClose, max_times: 15, interval: 1.5}` —— 每轮先判「还在广告层」再点，广告全关后自动停，绝不会像盲点那样点到设置齿轮。批 2 另有合并判据 `DlgStartup`（广告层 + 公告）只用于「开屏还没走完」的等待信号，**别拿它点**。",
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "DlgAdLayer"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    1240,
+                    41,
+                    1,
+                    1
+                ]
+            }
+        }
+    },
+    "BtnDailyCheckIn": {
+        "desc": "「每日签到」弹窗里**可领取的那一格**（高亮蓝 `#22ADFF`）。原为 `startup.json` 的 `签到` 节点（ColorMatch 同色），2026-11-01 抽到导航层当动作载体。**不要用 OCR 判它**：可领格上只有奖励图标、没有文字，已领格是橙色 √。⚠️ 已知局限：ColorMatch 的 box 是**所有命中像素的并集**，若同屏出现多个蓝色可领格，box 会横跨两格、中心点落在中间空处 —— 单格场景实测 `box=(852,177,70,70)`、中心 `(887,212)` 可用。",
+        "recognition": {
+            "type": "ColorMatch",
+            "param": {
+                "roi": [
+                    155,
+                    59,
+                    909,
+                    514
+                ],
+                "lower": [
+                    [
+                        34,
+                        173,
+                        255
+                    ]
+                ],
+                "upper": [
+                    [
+                        34,
+                        173,
+                        255
+                    ]
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        }
+    },
+    "强化": {
+        "desc": "菜单面板 → 强化（打铁铺入口）。原为 `random_evolution.json` 节点（带 `next: [装备进化]`），随机进化任务下线时迁到导航层：只保留「点进去」这一步，去掉 `next`，由 `page_guard.NAV_TABLE` 的 `(PageMain|PageMenuOpen, PageForge)` 边消费。",
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    7,
+                    464,
+                    111,
+                    149
+                ],
+                "expected": [
+                    "强化"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        }
+    },
+    "BtnPvpFormationFight": {
+        "desc": "站位设置弹窗的「开始战斗 -1」——**这里才真扣 1 次挑战**。pipeline 里必须经 `TapUnlessConsumes{consumes: \"ticket\"}` 使用，禁止直接 Click。2026-10-31 实测：点它 → 进战斗约 60–75s → `DlgPvpResult`。",
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    700,
+                    615,
+                    180,
+                    60
+                ],
+                "expected": [
+                    "开始战斗"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        }
+    },
+    "BtnPvpResultConfirm": {
+        "desc": "44 结果面板的「确认」（0 消耗）。点完是加载黑屏，回面板要轮询 `PagePvp44`。",
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    990,
+                    630,
+                    100,
+                    50
+                ],
+                "expected": [
+                    "确认"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        }
+    },
+    "BtnBattleLogClose": {
+        "desc": "「战斗记录」弹窗的 ✕。弹窗判据（`DlgBattleLog`）成立才允许点这个坐标——X 是图标没有文字。实测 ✕ 中心 `(1058,59)`。",
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "DlgBattleLog"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    1046,
+                    47,
+                    24,
+                    24
+                ]
+            }
+        }
+    },
+    "BtnTipSentConfirm": {
+        "desc": "`DlgTipSent`（好友页「已经向所有好友发送礼物」提示）的「确认」——位置 `(615,566,47,28)` 实测于 `tests/golden/dlg_tip_sent.png`。**不配 `target`**：OCR 自带识别框，`_click_node` 会点框中心 `(638,580)`，比固定坐标稳。⚠️ 只有 `DlgTipSent` 成立时才会被点（判据绑死正文），不会误确认别的提示框。",
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    500,
+                    540,
+                    300,
+                    80
+                ],
+                "expected": [
+                    "确认"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        }
+    },
+    "NavBack": {
+        "desc": "左上白色返回箭头（子页通用，WebEvent 页也有）。沿用旧 `返回` 节点的纯白 ColorMatch（生产验证过的判据），但 ROI 收到箭头本身；定位框来自 2026-10-31 真机 OCR 标定 (29,13,33,41)。⚠️ 只在**已认出是子页**时才用它，`PageUnknown` 下不使用（见 page_guard.nav_to）。",
+        "recognition": {
+            "type": "ColorMatch",
+            "param": {
+                "roi": [
+                    20,
+                    7,
+                    53,
+                    58
+                ],
+                "lower": [
+                    [
+                        255,
+                        255,
+                        255
+                    ]
+                ],
+                "upper": [
+                    255,
+                    255,
+                    255
+                ],
+                "count": 5
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    37,
+                    25,
+                    17,
+                    24
+                ]
+            }
+        }
+    },
+    "NavGuideRecommend": {
+        "desc": "游玩指南顶部 tab 的「推荐」。为什么要单独一个节点：`NavTo(PageGuide)` 只保证「在游玩指南里」，四个 tab（推荐/裂痕/PvP/挑战）都满足 `PageGuide`，所以**不保证停在推荐**；而忒提斯只在推荐页能进（用户 2026-11-01 确认）。坐标取真机帧 `_tmp/shots/rift_page.png` 实测框 `(147,107,44,24)`。",
+        "recognition": {
+            "type": "OCR",
+            "param": {
+                "roi": [
+                    140,
+                    95,
+                    60,
+                    45
+                ],
+                "expected": [
+                    "推荐"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click"
+        }
+    },
+    "BtnTaskGuide": {
+        "desc": "主界面任务横幅左侧的三条横 `(410,618)` —— 开「任务指南」页的唯一入口（真机帧 `_tmp/shots/main_bottom.png`）。判据挂 `PageMain` 防止在别的页面瞎点同坐标；**必须 `And` 包一层**，`PageMain` 自带识别框，不包会点到框中心。 post_delay: 2000 是必要的：真机第一次跑时点完立刻断言，2s 内页面还没切完，PageTaskGuide 判 Unknown 直接失败。",
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "PageMain"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    410,
+                    618,
+                    1,
+                    1
+                ]
+            }
+        },
+        "next": [
+            "ReceiveDailyCategory"
+        ],
+        "post_delay": 2000
+    },
+    "BtnAutoBattleSweep": {
+        "desc": "「自动战斗设置」弹窗底部的**绿色「扫荡」按钮** `(720,624,42,23)` → 点中心 `(741,635)`。2026-11-15 真机帧 `tests/golden/dlg_auto_battle_bloom.png`。⚠️ 这个按钮**会真扣体力**（帧上写 `90 (-90)` 体力 + `2,865 (-10)` 道具），所以只能经 `TapUnlessConsumes` 闸门调用，**绝不能**塞进 `close_dialogs`。外层必须包 `And{DlgAutoBattle}`：不然副本卡片上那个 `-10 扫荡` 也在同一带坐标。",
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "DlgAutoBattle"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    741,
+                    635,
+                    1,
+                    1
+                ]
+            }
+        }
+    },
+    "BtnBuyConfirm": {
+        "desc": "商店**数量弹窗右下角的价格按钮**（2026-11-14 真机：拉满后显示 `45,000`，未拉满时 `15,000`；按钮位置固定，文案会变所以只写 `target`）。外层必须包 `And{DlgBuyQuantity}` —— 否则同样的坐标在别的界面会点到别的东西。**点它是真花钱**，只能经 `TapUnlessConsumes` 闸门放开后调用。",
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "DlgBuyQuantity"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    774,
+                    608,
+                    1,
+                    1
+                ]
+            }
+        }
+    },
+    "BtnBuyCancel": {
+        "desc": "数量弹窗左下角「取消」（安全侧，`(506,597,40,26)`）。同样包 `And{DlgBuyQuantity}`。",
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "DlgBuyQuantity"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    526,
+                    610,
+                    1,
+                    1
+                ]
+            }
+        }
+    },
+    "BtnInnPanelClose": {
+        "desc": "关掉 `DlgInnPanel`（「25级旅馆」底部抽屉）：点面板**上方的空白** `(640,250)`（2026-11-14 真机实测，点一下就收起；面板本身没有 ✕）。外层必须包 `And{DlgInnPanel}`，否则在主界面瞎点同坐标会把旅店再点开一次。",
+        "recognition": {
+            "type": "And",
+            "param": {
+                "all_of": [
+                    "DlgInnPanel"
+                ]
+            }
+        },
+        "action": {
+            "type": "Click",
+            "param": {
+                "target": [
+                    640,
+                    250,
+                    1,
+                    1
+                ]
+            }
+        }
+    },
+    "BtnMainCoin": {
+        "desc": "⛔ **别接进任何链路**：旅店上方那个**金币图标点了不是领奖励，而是打开「25级旅馆」管理面板**（2026-11-14 真机实测：面板从底部抽屉弹出，有「使用浮游城收获券 / 视频 / 信息 / 设施管理 / 外观变更」）。那个面板目前**没有判据、`close_dialogs()` 收不掉**，一旦在启动链里点开就会挡住后面所有任务。节点保留仅供以后做「旅馆收益」流程时复用（真机帧 `tests/golden/main_coin.png`，源框 `(470,180,36,35)`）。",
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [0, 120, 1280, 480],
+                "template": "Main/金币.png",
+                "threshold": 0.8
+            }
+        },
+        "action": {
+            "type": "Click"
+        }
+    },
+    "BtnMainGem": {
+        "desc": "⚠️ **待确认语义，暂不接入链路**：那一排里的粉色图标（白六边形框 + 粉心，源框 `(513,175,49,45)`）。2026-11-14 实测点它金币 +627（像是真的领到了），但**点完之后那一排会重排/刷新，位置和图标种类都变** —— 后续帧上同位置已经是另一种图标，本模板匹配不到了。所以「逐个图标建模板」这条路对动态刷新的一排**不可靠**，见文档里那条待办。",
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [0, 120, 1280, 480],
+                "template": "Main/粉心.png",
+                "threshold": 0.8
+            }
+        },
+        "action": {
+            "type": "Click"
+        }
+    },
+    "BtnMainBlue": {
+        "desc": "旅店上方那一排里的**蓝紫方块**（源框 `(577,183,35,34)`）。同上：`TemplateMatch`，领完消失。",
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [0, 120, 1280, 480],
+                "template": "Main/蓝紫.png",
+                "threshold": 0.8
+            }
+        },
+        "action": {
+            "type": "Click"
+        }
+    },
+    "BtnMainChest": {
+        "desc": "主界面上**可领的宝箱**（用户 2026-11-14 指出：启动到旅馆界面后，小公主 / 建筑附近会冒宝箱之类的东西，要点一下）。模板裁自真机帧 `tests/golden/main_chest.png`：`assets/resource/image/Main/宝箱.png` 42x45，源框 `(657,238)-(699,283)`。用 `TemplateMatch` 在**主界面中部**搜（图标出现的位置不固定，绝不能写死坐标），threshold 0.8。⚠️ **不要包 `And{PageMain}`**：包了会丢掉模板自己的匹配框，点击会落到 `PageMain` 的框中心。点它只领奖励、**零消耗**。领完图标就消失，所以外层用 `TapWhilePresent` 连点，判据不再命中即收工。",
+        "recognition": {
+            "type": "TemplateMatch",
+            "param": {
+                "roi": [
+                    0,
+                    120,
+                    1280,
+                    480
+                ],
+                "template": "Main/宝箱.png",
+                "threshold": 0.8
+            }
+        },
+        "action": {
+            "type": "Click"
+        }
+    }
+}

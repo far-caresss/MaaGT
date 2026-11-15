@@ -2,7 +2,7 @@
     "task": [
         {
             "name": "商店",
-            "entry": "Shop"
+            "entry": "ShopNav"
         }
     ]
 }
